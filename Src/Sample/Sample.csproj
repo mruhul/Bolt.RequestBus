@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Bolt.Cache, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bolt.Cache.1.3.0.0\lib\net45\Bolt.Cache.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Bolt.Common.Extensions, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Bolt.Common.Extensions.1.0.4.0\lib\net45\Bolt.Common.Extensions.dll</HintPath>
       <Private>True</Private>
@@ -76,13 +80,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CreateBook\BookCreatedEvent.cs" />
+    <Compile Include="CreateBook\BookCreatedEventHandler.cs" />
     <Compile Include="CreateBook\CreateBookRequest.cs" />
     <Compile Include="CreateBook\CreateBookRequestHandler.cs" />
     <Compile Include="CreateBook\CreateBookValidator.cs" />
-    <Compile Include="CreateBook\ICreateBookRepository.cs" />
-    <Compile Include="CreateBook\CreateBookData.cs" />
+    <Compile Include="GetBooks\BookDto.cs" />
+    <Compile Include="GetBooks\DiscountDto.cs" />
+    <Compile Include="GetBooks\DummyDiscountApiProxy.cs" />
+    <Compile Include="GetBooks\GetBooksByIdRequestHandler.cs" />
+    <Compile Include="GetBooks\IDiscountApiProxy.cs" />
+    <Compile Include="GetBooks\LoadDiscountFilter.cs" />
+    <Compile Include="Shared\BookRecord.cs" />
     <Compile Include="EventSource\EventSourceHandler.cs" />
     <Compile Include="EventSource\IEventSourceRepo.cs" />
+    <Compile Include="GetBooks\GetBookByIdRequest.cs" />
+    <Compile Include="Infrastructure\PersistentStores\IPersistentStore.cs" />
+    <Compile Include="Infrastructure\PersistentStores\JsonPersistentStore.cs" />
+    <Compile Include="Infrastructure\PersistentStores\PersistentStoreExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Sample.CreateBook
+namespace Sample.Shared
 {
-    public class CreateBookData
+    public class BookRecord
     {
         public Guid Id { get; set; }
         public string Title { get; set; }
