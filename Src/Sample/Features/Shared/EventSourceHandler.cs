@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using Bolt.RequestBus;
+﻿using Bolt.RequestBus;
 using Sample.Infrastructure.PersistentStores;
 
-namespace Sample.EventSource
+namespace Sample.Features.Shared
 {
     public class EventSourceHandler<TEvent> : IEventHandler<TEvent> where TEvent : IEvent
     {

@@ -80,21 +80,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CreateBook\BookCreatedEvent.cs" />
-    <Compile Include="CreateBook\BookCreatedEventHandler.cs" />
-    <Compile Include="CreateBook\CreateBookRequest.cs" />
-    <Compile Include="CreateBook\CreateBookRequestHandler.cs" />
-    <Compile Include="CreateBook\CreateBookValidator.cs" />
-    <Compile Include="GetBooks\BookDto.cs" />
-    <Compile Include="GetBooks\DiscountDto.cs" />
-    <Compile Include="GetBooks\DummyDiscountApiProxy.cs" />
-    <Compile Include="GetBooks\GetBooksByIdRequestHandler.cs" />
-    <Compile Include="GetBooks\IDiscountApiProxy.cs" />
-    <Compile Include="GetBooks\LoadDiscountFilter.cs" />
-    <Compile Include="Shared\BookRecord.cs" />
-    <Compile Include="EventSource\EventSourceHandler.cs" />
-    <Compile Include="EventSource\IEventSourceRepo.cs" />
-    <Compile Include="GetBooks\GetBookByIdRequest.cs" />
+    <Compile Include="Features\CreateBook\BookCreatedEvent.cs" />
+    <Compile Include="Features\CreateBook\BookCreatedEventHandler.cs" />
+    <Compile Include="Features\CreateBook\CreateBookRequest.cs" />
+    <Compile Include="Features\CreateBook\CreateBookRequestHandler.cs" />
+    <Compile Include="Features\CreateBook\CreateBookValidator.cs" />
+    <Compile Include="Features\GetBooks\BookDto.cs" />
+    <Compile Include="Features\GetBooks\DiscountDto.cs" />
+    <Compile Include="Features\GetBooks\DummyDiscountApiProxy.cs" />
+    <Compile Include="Features\GetBooks\GetBooksByIdRequestHandler.cs" />
+    <Compile Include="Features\GetBooks\IDiscountApiProxy.cs" />
+    <Compile Include="Features\GetBooks\LoadDiscountFilter.cs" />
+    <Compile Include="Features\Shared\BookRecord.cs" />
+    <Compile Include="Features\Shared\EventSourceHandler.cs" />
+    <Compile Include="Features\GetBooks\GetBookByIdRequest.cs" />
     <Compile Include="Infrastructure\PersistentStores\IPersistentStore.cs" />
     <Compile Include="Infrastructure\PersistentStores\JsonPersistentStore.cs" />
     <Compile Include="Infrastructure\PersistentStores\PersistentStoreExtensions.cs" />

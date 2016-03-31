@@ -1,11 +1,9 @@
 ﻿using System.Linq;
-using System.Runtime.InteropServices;
-using Bolt.RequestBus;
 using Bolt.RequestBus.Handlers;
+using Sample.Features.Shared;
 using Sample.Infrastructure.PersistentStores;
-using Sample.Shared;
 
-namespace Sample.GetBooks
+namespace Sample.Features.GetBooks
 {
     public class GetBooksByIdRequestHandler : RequestHandlerBase<GetBookByIdRequest, BookDto>
     {

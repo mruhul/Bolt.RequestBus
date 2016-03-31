@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Sample.Shared
+namespace Sample.Features.Shared
 {
     public class BookRecord
     {

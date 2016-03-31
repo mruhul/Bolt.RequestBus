@@ -1,7 +1,7 @@
 using System.Linq;
 using Bolt.RequestBus.Filters;
 
-namespace Sample.GetBooks
+namespace Sample.Features.GetBooks
 {
     public class LoadDiscountFilter : RequestFilterBase<GetBookByIdRequest, BookDto>
     {

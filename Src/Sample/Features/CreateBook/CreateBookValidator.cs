@@ -5,7 +5,7 @@ using Bolt.RequestBus;
 using Bolt.RequestBus.Validators;
 using Bolt.Validation.Extensions;
 
-namespace Sample.CreateBook
+namespace Sample.Features.CreateBook
 {
     public class CreateBookValidator : ValidatorBase<CreateBookRequest>
     {

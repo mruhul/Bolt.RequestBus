@@ -1,4 +1,4 @@
-﻿namespace Sample.CreateBook
+﻿namespace Sample.Features.CreateBook
 {
     public class CreateBookRequest : Bolt.RequestBus.IRequest
     {

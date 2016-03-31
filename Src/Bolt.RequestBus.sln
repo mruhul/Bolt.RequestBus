@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bolt.RequestBus.Autofac", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample", "Sample\Sample.csproj", "{9F500578-0E53-4ACA-A632-7F11FF9C67F3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.Api", "Sample.Api\Sample.Api.csproj", "{4B66EC82-8B53-4767-85DB-ABFF2F0867E8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{9F500578-0E53-4ACA-A632-7F11FF9C67F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F500578-0E53-4ACA-A632-7F11FF9C67F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9F500578-0E53-4ACA-A632-7F11FF9C67F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B66EC82-8B53-4767-85DB-ABFF2F0867E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B66EC82-8B53-4767-85DB-ABFF2F0867E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B66EC82-8B53-4767-85DB-ABFF2F0867E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B66EC82-8B53-4767-85DB-ABFF2F0867E8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

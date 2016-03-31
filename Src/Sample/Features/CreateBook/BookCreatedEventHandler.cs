@@ -1,7 +1,7 @@
 ﻿using System;
 using Bolt.RequestBus;
 
-namespace Sample.CreateBook
+namespace Sample.Features.CreateBook
 {
     public class BookCreatedEventHandler : IEventHandler<BookCreatedEvent>
     {

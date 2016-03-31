@@ -2,10 +2,10 @@ using System;
 using Bolt.Logger;
 using Bolt.RequestBus;
 using Bolt.RequestBus.Handlers;
+using Sample.Features.Shared;
 using Sample.Infrastructure.PersistentStores;
-using Sample.Shared;
 
-namespace Sample.CreateBook
+namespace Sample.Features.CreateBook
 {
     public class CreateBookRequestHandler : RequestHandlerBase<CreateBookRequest, Guid>
     {

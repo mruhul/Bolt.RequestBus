@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Sample.GetBooks
+namespace Sample.Features.GetBooks
 {
     public interface IDiscountApiProxy
     {

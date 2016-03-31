@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Sample.GetBooks
+namespace Sample.Features.GetBooks
 {
     public class DummyDiscountApiProxy : IDiscountApiProxy
     {

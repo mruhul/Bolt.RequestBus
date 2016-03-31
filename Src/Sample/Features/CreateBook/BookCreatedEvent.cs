@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Bolt.RequestBus;
 
-namespace Sample.CreateBook
+namespace Sample.Features.CreateBook
 {
     public class BookCreatedEvent : IEvent
     {

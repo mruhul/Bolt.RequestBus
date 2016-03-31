@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Sample.GetBooks
+namespace Sample.Features.GetBooks
 {
     public class DiscountDto
     {
