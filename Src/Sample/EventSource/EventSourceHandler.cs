@@ -5,14 +5,16 @@ namespace Sample.CreateBook
 {
     public class EventSourceHandler<TEvent> : IEventHandler<TEvent> where TEvent : IEvent
     {
-        public EventSourceHandler()
+        private readonly IEventSourceRepo repo;
+
+        public EventSourceHandler(IEventSourceRepo repo)
         {
-            
+            this.repo = repo;
         }
 
         public void Handle(TEvent eEvent)
         {
-            throw new NotImplementedException();
+            repo.Save(eEvent);
         }
     }
 }

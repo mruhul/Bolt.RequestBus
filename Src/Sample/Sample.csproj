@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Bolt.Common.Extensions, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bolt.Common.Extensions.1.0.4.0\lib\net45\Bolt.Common.Extensions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Bolt.Logger, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Bolt.Logger.1.0.0.1\lib\net45\Bolt.Logger.dll</HintPath>
       <Private>True</Private>
@@ -38,12 +42,20 @@
       <HintPath>..\packages\Bolt.Logger.NLog.1.0.0.1\lib\net45\Bolt.Logger.NLog.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Bolt.RequestBus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bolt.RequestBus.1.0.0.0\lib\net46\Bolt.RequestBus.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Bolt.Serializer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Bolt.Serializer.1.0.0.0\lib\net45\Bolt.Serializer.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Bolt.Serializer.Json, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Bolt.Serializer.Json.1.0.0.1\lib\net45\Bolt.Serializer.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Bolt.Validation, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bolt.Validation.1.0.0.1\lib\net45\Bolt.Validation.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -64,18 +76,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
     <Compile Include="CreateBook\CreateBookRequest.cs" />
+    <Compile Include="CreateBook\CreateBookRequestHandler.cs" />
+    <Compile Include="CreateBook\CreateBookValidator.cs" />
+    <Compile Include="CreateBook\ICreateBookRepository.cs" />
+    <Compile Include="CreateBook\CreateBookData.cs" />
+    <Compile Include="EventSource\EventSourceHandler.cs" />
+    <Compile Include="EventSource\IEventSourceRepo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Bolt.RequestBus.Autofac\Bolt.RequestBus.Autofac.csproj">
       <Project>{b27515d0-e5a7-428c-aea2-49f0deb0b22c}</Project>
       <Name>Bolt.RequestBus.Autofac</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Bolt.RequestBus\Bolt.RequestBus.csproj">
-      <Project>{f7cc912c-bbfe-4d4a-ab78-da0bc1eb6bf5}</Project>
-      <Name>Bolt.RequestBus</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
