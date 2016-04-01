@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using Bolt.Serializer;
 
 namespace Sample.Infrastructure.PersistentStores
@@ -10,7 +11,8 @@ namespace Sample.Infrastructure.PersistentStores
     {
         private readonly ISerializer serializer;
         private readonly string srcDir;
-        private static readonly object FileWriteLock = new object();
+        private static readonly ReaderWriterLockSlim FileLock = new ReaderWriterLockSlim();
+        
 
         public JsonPersistentStore(ISerializer serializer)
         {
@@ -25,13 +27,26 @@ namespace Sample.Infrastructure.PersistentStores
 
         public void Write<T>(string groupName, IEnumerable<T> data)
         {
-            lock (FileWriteLock)
-            {
-                var records = Read<T>(groupName).ToList();
+            var filePath = GetFilePath(groupName);
 
-                records.AddRange(data);
-                
-                File.WriteAllText(GetFilePath(groupName), serializer.Serialize(records));
+            FileLock.EnterWriteLock();
+
+            try
+            {
+                if (!Directory.Exists(srcDir))
+                {
+                    Directory.CreateDirectory(srcDir);
+                }
+
+                var records = ReadWithoutLock<object>(filePath).ToList();
+
+                records.AddRange(data.Select(x => (object)x));
+
+                File.WriteAllText(filePath, serializer.Serialize(records));
+            }
+            finally
+            {
+                FileLock.ExitWriteLock();
             }
         }
 
@@ -44,14 +59,26 @@ namespace Sample.Infrastructure.PersistentStores
         {
             var path = GetFilePath(groupName);
 
-            return File.Exists(path) 
-                ? serializer.Deserialize<IEnumerable<T>>(File.ReadAllText(path)) ?? Enumerable.Empty<T>() 
-                : Enumerable.Empty<T>();
+            FileLock.EnterReadLock();
+
+            try
+            {
+                return ReadWithoutLock<T>(path);
+            }
+            finally
+            {
+                FileLock.ExitReadLock();
+            }
         }
 
-        private string GetFilePath<T>()
+        private IEnumerable<T> ReadWithoutLock<T>(string path)
         {
-            return GetFilePath(typeof (T).Name);
+            if (!File.Exists(path)) return Enumerable.Empty<T>();
+            var content = File.ReadAllText(path);
+
+            return string.IsNullOrWhiteSpace(content)
+                ? Enumerable.Empty<T>()
+                : serializer.Deserialize<IEnumerable<T>>(content);
         }
 
         private string GetFilePath(string groupName)

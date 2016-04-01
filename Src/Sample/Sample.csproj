@@ -46,10 +46,6 @@
       <HintPath>..\packages\Bolt.Logger.NLog.1.0.0.1\lib\net45\Bolt.Logger.NLog.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Bolt.RequestBus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Bolt.RequestBus.1.0.0.0\lib\net46\Bolt.RequestBus.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Bolt.Serializer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Bolt.Serializer.1.0.0.0\lib\net45\Bolt.Serializer.dll</HintPath>
       <Private>True</Private>
@@ -92,21 +88,27 @@
     <Compile Include="Features\GetBooks\IDiscountApiProxy.cs" />
     <Compile Include="Features\GetBooks\LoadDiscountFilter.cs" />
     <Compile Include="Features\Shared\BookRecord.cs" />
+    <Compile Include="Features\Shared\Constants.cs" />
     <Compile Include="Features\Shared\EventSourceHandler.cs" />
     <Compile Include="Features\GetBooks\GetBookByIdRequest.cs" />
+    <Compile Include="Infrastructure\Extensions.cs" />
     <Compile Include="Infrastructure\PersistentStores\IPersistentStore.cs" />
     <Compile Include="Infrastructure\PersistentStores\JsonPersistentStore.cs" />
     <Compile Include="Infrastructure\PersistentStores\PersistentStoreExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Bolt.RequestBus.Autofac\Bolt.RequestBus.Autofac.csproj">
       <Project>{b27515d0-e5a7-428c-aea2-49f0deb0b22c}</Project>
       <Name>Bolt.RequestBus.Autofac</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
+    <ProjectReference Include="..\Bolt.RequestBus\Bolt.RequestBus.csproj">
+      <Project>{f7cc912c-bbfe-4d4a-ab78-da0bc1eb6bf5}</Project>
+      <Name>Bolt.RequestBus</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

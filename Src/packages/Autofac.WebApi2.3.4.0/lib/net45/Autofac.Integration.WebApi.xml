@@ -26,6 +26,16 @@
             </summary>
             <param name="actionExecutedContext">The context for the action.</param>
         </member>
+        <member name="T:Autofac.Integration.WebApi.IFilterWrapper">
+            <summary>
+            Common behaviour required for filter wrappers.
+            </summary>
+        </member>
+        <member name="P:Autofac.Integration.WebApi.IFilterWrapper.MetadataKey">
+            <summary>
+            Gets the metadata key used to retrieve the filter metadata.
+            </summary>
+        </member>
         <member name="M:Autofac.Integration.WebApi.ActionFilterWrapper.#ctor(Autofac.Integration.WebApi.FilterMetadata)">
             <summary>
             Initializes a new instance of the <see cref="T:Autofac.Integration.WebApi.ActionFilterWrapper"/> class.
@@ -49,6 +59,11 @@
             <exception cref="T:System.ArgumentNullException">
             Thrown if <paramref name="actionExecutedContext"/> is <see langword="null"/>.
             </exception>
+        </member>
+        <member name="P:Autofac.Integration.WebApi.ActionFilterWrapper.MetadataKey">
+            <summary>
+            Gets the metadata key used to retrieve the filter metadata.
+            </summary>
         </member>
         <member name="T:Autofac.Integration.WebApi.AuthorizationFilterWrapper">
             <summary>
@@ -81,14 +96,40 @@
             Thrown if <paramref name="actionContext"/> is <see langword="null"/>.
             </exception>
         </member>
+        <member name="P:Autofac.Integration.WebApi.AuthorizationFilterWrapper.MetadataKey">
+            <summary>
+            Gets the metadata key used to retrieve the filter metadata.
+            </summary>
+        </member>
+        <member name="T:Autofac.Integration.WebApi.ActionFilterOverrideWrapper">
+            <summary>
+            Resolves a filter override for the specified metadata for each controller request.
+            </summary>
+        </member>
+        <member name="M:Autofac.Integration.WebApi.ActionFilterOverrideWrapper.#ctor(Autofac.Integration.WebApi.FilterMetadata)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Autofac.Integration.WebApi.ActionFilterOverrideWrapper"/> class.
+            </summary>
+            <param name="filterMetadata">The filter metadata.</param>
+        </member>
+        <member name="P:Autofac.Integration.WebApi.ActionFilterOverrideWrapper.MetadataKey">
+            <summary>
+            Gets the metadata key used to retrieve the filter metadata.
+            </summary>
+        </member>
+        <member name="P:Autofac.Integration.WebApi.ActionFilterOverrideWrapper.FiltersToOverride">
+            <summary>
+            Gets the filters to override.
+            </summary>
+        </member>
+        <member name="T:Autofac.Integration.WebApi.AutofacOverrideFilter">
+            <summary>
+            Allows other filters to be overriden at the control and action level.
+            </summary>
+        </member>
         <member name="T:Autofac.Integration.WebApi.AutofacWebApiDependencyResolver">
             <summary>
             Autofac implementation of the <see cref="T:System.Web.Http.Dependencies.IDependencyResolver"/> interface.
-            </summary>
-        </member>
-        <member name="F:Autofac.Integration.WebApi.AutofacWebApiDependencyResolver.ApiRequestTag">
-            <summary>
-            Tag used to identify registrations that are scoped to the API request level.
             </summary>
         </member>
         <member name="M:Autofac.Integration.WebApi.AutofacWebApiDependencyResolver.#ctor(Autofac.ILifetimeScope)">
@@ -260,6 +301,138 @@
             Gets the type of the controller.
             </summary>
         </member>
+        <member name="T:Autofac.Integration.WebApi.AuthenticationFilterWrapper">
+            <summary>
+            Resolves a filter for the specified metadata for each controller request.
+            </summary>
+        </member>
+        <member name="T:Autofac.Integration.WebApi.IAutofacAuthenticationFilter">
+            <summary>
+            An authentication filter that will be created for each controller request.
+            </summary>
+        </member>
+        <member name="M:Autofac.Integration.WebApi.IAutofacAuthenticationFilter.OnAuthenticate(System.Web.Http.Filters.HttpAuthenticationContext)">
+            <summary>
+            Called when a request requires authentication.
+            </summary>
+            <param name="context">The context for the authentication.</param>
+        </member>
+        <member name="M:Autofac.Integration.WebApi.IAutofacAuthenticationFilter.OnChallenge(System.Web.Http.Filters.HttpAuthenticationChallengeContext)">
+            <summary>
+            Called when an authentication challenge is required.
+            </summary>
+            <param name="context">The context for the authentication challenge.</param>
+        </member>
+        <member name="M:Autofac.Integration.WebApi.AuthenticationFilterWrapper.#ctor(Autofac.Integration.WebApi.FilterMetadata)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Autofac.Integration.WebApi.AuthenticationFilterWrapper"/> class.
+            </summary>
+            <param name="filterMetadata">The filter metadata.</param>
+        </member>
+        <member name="P:Autofac.Integration.WebApi.AuthenticationFilterWrapper.MetadataKey">
+            <summary>
+            Gets the metadata key used to retrieve the filter metadata.
+            </summary>
+        </member>
+        <member name="T:Autofac.Integration.WebApi.AuthenticationFilterOverrideWrapper">
+            <summary>
+            Resolves a filter override for the specified metadata for each controller request.
+            </summary>
+        </member>
+        <member name="M:Autofac.Integration.WebApi.AuthenticationFilterOverrideWrapper.#ctor(Autofac.Integration.WebApi.FilterMetadata)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Autofac.Integration.WebApi.AuthenticationFilterOverrideWrapper"/> class.
+            </summary>
+            <param name="filterMetadata">The filter metadata.</param>
+        </member>
+        <member name="P:Autofac.Integration.WebApi.AuthenticationFilterOverrideWrapper.MetadataKey">
+            <summary>
+            Gets the metadata key used to retrieve the filter metadata.
+            </summary>
+        </member>
+        <member name="P:Autofac.Integration.WebApi.AuthenticationFilterOverrideWrapper.FiltersToOverride">
+            <summary>
+            Gets the filters to override.
+            </summary>
+        </member>
+        <member name="T:Autofac.Integration.WebApi.AuthorizationFilterOverrideWrapper">
+            <summary>
+            Resolves a filter override for the specified metadata for each controller request.
+            </summary>
+        </member>
+        <member name="M:Autofac.Integration.WebApi.AuthorizationFilterOverrideWrapper.#ctor(Autofac.Integration.WebApi.FilterMetadata)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Autofac.Integration.WebApi.AuthorizationFilterOverrideWrapper"/> class.
+            </summary>
+            <param name="filterMetadata">The filter metadata.</param>
+        </member>
+        <member name="P:Autofac.Integration.WebApi.AuthorizationFilterOverrideWrapper.MetadataKey">
+            <summary>
+            Gets the metadata key used to retrieve the filter metadata.
+            </summary>
+        </member>
+        <member name="P:Autofac.Integration.WebApi.AuthorizationFilterOverrideWrapper.FiltersToOverride">
+            <summary>
+            Gets the filters to override.
+            </summary>
+        </member>
+        <member name="T:Autofac.Integration.WebApi.ExceptionFilterOverrideWrapper">
+            <summary>
+            Resolves a filter override for the specified metadata for each controller request.
+            </summary>
+        </member>
+        <member name="T:Autofac.Integration.WebApi.ExceptionFilterWrapper">
+            <summary>
+            Resolves a filter for the specified metadata for each controller request.
+            </summary>
+        </member>
+        <member name="T:Autofac.Integration.WebApi.IAutofacExceptionFilter">
+            <summary>
+            An exception filter that will be created for each controller request.
+            </summary>
+        </member>
+        <member name="M:Autofac.Integration.WebApi.IAutofacExceptionFilter.OnException(System.Web.Http.Filters.HttpActionExecutedContext)">
+            <summary>
+            Called when an exception is thrown.
+            </summary>
+            <param name="actionExecutedContext">The context for the action.</param>
+        </member>
+        <member name="M:Autofac.Integration.WebApi.ExceptionFilterWrapper.#ctor(Autofac.Integration.WebApi.FilterMetadata)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Autofac.Integration.WebApi.ExceptionFilterWrapper"/> class.
+            </summary>
+            <param name="filterMetadata">The filter metadata.</param>
+        </member>
+        <member name="M:Autofac.Integration.WebApi.ExceptionFilterWrapper.OnException(System.Web.Http.Filters.HttpActionExecutedContext)">
+            <summary>
+            Called when an exception is thrown.
+            </summary>
+            <param name="actionExecutedContext">The context for the action.</param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="actionExecutedContext"/> is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="P:Autofac.Integration.WebApi.ExceptionFilterWrapper.MetadataKey">
+            <summary>
+            Gets the metadata key used to retrieve the filter metadata.
+            </summary>
+        </member>
+        <member name="M:Autofac.Integration.WebApi.ExceptionFilterOverrideWrapper.#ctor(Autofac.Integration.WebApi.FilterMetadata)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Autofac.Integration.WebApi.ExceptionFilterOverrideWrapper"/> class.
+            </summary>
+            <param name="filterMetadata">The filter metadata.</param>
+        </member>
+        <member name="P:Autofac.Integration.WebApi.ExceptionFilterOverrideWrapper.MetadataKey">
+            <summary>
+            Gets the metadata key used to retrieve the filter metadata.
+            </summary>
+        </member>
+        <member name="P:Autofac.Integration.WebApi.ExceptionFilterOverrideWrapper.FiltersToOverride">
+            <summary>
+            Gets the filters to override.
+            </summary>
+        </member>
         <member name="T:Autofac.Integration.WebApi.CurrentRequestHandler">
             <summary>
                 A delegating handler that updates the current dependency scope
@@ -296,37 +469,6 @@
             <summary>
             Gets the request lifetime scope from the Autofac dependency scope.
             </summary>
-        </member>
-        <member name="T:Autofac.Integration.WebApi.ExceptionFilterWrapper">
-            <summary>
-            Resolves a filter for the specified metadata for each controller request.
-            </summary>
-        </member>
-        <member name="T:Autofac.Integration.WebApi.IAutofacExceptionFilter">
-            <summary>
-            An exception filter that will be created for each controller request.
-            </summary>
-        </member>
-        <member name="M:Autofac.Integration.WebApi.IAutofacExceptionFilter.OnException(System.Web.Http.Filters.HttpActionExecutedContext)">
-            <summary>
-            Called when an exception is thrown.
-            </summary>
-            <param name="actionExecutedContext">The context for the action.</param>
-        </member>
-        <member name="M:Autofac.Integration.WebApi.ExceptionFilterWrapper.#ctor(Autofac.Integration.WebApi.FilterMetadata)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Autofac.Integration.WebApi.ExceptionFilterWrapper"/> class.
-            </summary>
-            <param name="filterMetadata">The filter metadata.</param>
-        </member>
-        <member name="M:Autofac.Integration.WebApi.ExceptionFilterWrapper.OnException(System.Web.Http.Filters.HttpActionExecutedContext)">
-            <summary>
-            Called when an exception is thrown.
-            </summary>
-            <param name="actionExecutedContext">The context for the action.</param>
-            <exception cref="T:System.ArgumentNullException">
-            Thrown if <paramref name="actionExecutedContext"/> is <see langword="null"/>.
-            </exception>
         </member>
         <member name="T:Autofac.Integration.WebApi.FilterMetadata">
             <summary>
@@ -411,6 +553,9 @@
             <param name="registration">The registration to configure.</param>
             <param name="lifetimeScopeTags">Additional tags applied for matching lifetime scopes.</param>
             <returns>A registration builder allowing further configuration of the component.</returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="registration"/> is <see langword="null"/>.
+            </exception>
         </member>
         <member name="M:Autofac.Integration.WebApi.RegistrationExtensions.InstancePerApiControllerType``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2},System.Type)">
             <summary>
@@ -503,6 +648,23 @@
             <param name="registration">The registration.</param>
             <returns>A registration builder allowing further configuration of the component.</returns>
         </member>
+        <member name="M:Autofac.Integration.WebApi.RegistrationExtensions.AsWebApiActionFilterOverrideFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Linq.Expressions.Expression{System.Action{``0}})">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:Autofac.Integration.WebApi.IAutofacActionFilter"/> override for the specified controller action.
+            </summary>
+            <typeparam name="TController">The type of the controller.</typeparam>
+            <param name="registration">The registration.</param>
+            <param name="actionSelector">The action selector.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.WebApi.RegistrationExtensions.AsWebApiActionFilterOverrideFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle})">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:Autofac.Integration.WebApi.IAutofacActionFilter"/> override for the specified controller.
+            </summary>
+            <typeparam name="TController">The type of the controller.</typeparam>
+            <param name="registration">The registration.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
         <member name="M:Autofac.Integration.WebApi.RegistrationExtensions.AsWebApiAuthorizationFilterFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Linq.Expressions.Expression{System.Action{``0}})">
             <summary>
             Sets the provided registration to act as an <see cref="T:Autofac.Integration.WebApi.IAutofacAuthorizationFilter"/> for the specified controller action.
@@ -515,6 +677,23 @@
         <member name="M:Autofac.Integration.WebApi.RegistrationExtensions.AsWebApiAuthorizationFilterFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle})">
             <summary>
             Sets the provided registration to act as an <see cref="T:Autofac.Integration.WebApi.IAutofacAuthorizationFilter"/> for the specified controller.
+            </summary>
+            <typeparam name="TController">The type of the controller.</typeparam>
+            <param name="registration">The registration.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.WebApi.RegistrationExtensions.AsWebApiAuthorizationFilterOverrideFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Linq.Expressions.Expression{System.Action{``0}})">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:Autofac.Integration.WebApi.IAutofacAuthorizationFilter"/> override for the specified controller action.
+            </summary>
+            <typeparam name="TController">The type of the controller.</typeparam>
+            <param name="registration">The registration.</param>
+            <param name="actionSelector">The action selector.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.WebApi.RegistrationExtensions.AsWebApiAuthorizationFilterOverrideFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle})">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:Autofac.Integration.WebApi.IAutofacAuthorizationFilter"/> override for the specified controller.
             </summary>
             <typeparam name="TController">The type of the controller.</typeparam>
             <param name="registration">The registration.</param>
@@ -535,6 +714,117 @@
             </summary>
             <typeparam name="TController">The type of the controller.</typeparam>
             <param name="registration">The registration.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.WebApi.RegistrationExtensions.AsWebApiExceptionFilterOverrideFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Linq.Expressions.Expression{System.Action{``0}})">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:Autofac.Integration.WebApi.IAutofacExceptionFilter"/> override for the specified controller action.
+            </summary>
+            <typeparam name="TController">The type of the controller.</typeparam>
+            <param name="registration">The registration.</param>
+            <param name="actionSelector">The action selector.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.WebApi.RegistrationExtensions.AsWebApiExceptionFilterOverrideFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle})">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:Autofac.Integration.WebApi.IAutofacExceptionFilter"/> override for the specified controller.
+            </summary>
+            <typeparam name="TController">The type of the controller.</typeparam>
+            <param name="registration">The registration.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.WebApi.RegistrationExtensions.AsWebApiAuthenticationFilterFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Linq.Expressions.Expression{System.Action{``0}})">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:Autofac.Integration.WebApi.IAutofacAuthenticationFilter"/> for the specified controller action.
+            </summary>
+            <typeparam name="TController">The type of the controller.</typeparam>
+            <param name="registration">The registration.</param>
+            <param name="actionSelector">The action selector.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.WebApi.RegistrationExtensions.AsWebApiAuthenticationFilterFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle})">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:Autofac.Integration.WebApi.IAutofacAuthenticationFilter"/> for the specified controller.
+            </summary>
+            <typeparam name="TController">The type of the controller.</typeparam>
+            <param name="registration">The registration.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.WebApi.RegistrationExtensions.AsWebApiAuthenticationFilterOverrideFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle},System.Linq.Expressions.Expression{System.Action{``0}})">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:Autofac.Integration.WebApi.IAutofacAuthenticationFilter"/> override for the specified controller action.
+            </summary>
+            <typeparam name="TController">The type of the controller.</typeparam>
+            <param name="registration">The registration.</param>
+            <param name="actionSelector">The action selector.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.WebApi.RegistrationExtensions.AsWebApiAuthenticationFilterOverrideFor``1(Autofac.Builder.IRegistrationBuilder{System.Object,Autofac.Builder.IConcreteActivatorData,Autofac.Builder.SingleRegistrationStyle})">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:Autofac.Integration.WebApi.IAutofacAuthenticationFilter"/> override for the specified controller.
+            </summary>
+            <typeparam name="TController">The type of the controller.</typeparam>
+            <param name="registration">The registration.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.WebApi.RegistrationExtensions.OverrideWebApiActionFilterFor``1(Autofac.ContainerBuilder,System.Linq.Expressions.Expression{System.Action{``0}})">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:System.Web.Http.Filters.IOverrideFilter"/> for the specified controller action.
+            </summary>
+            <param name="builder">The container builder.</param>
+            <param name="actionSelector">The action selector.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.WebApi.RegistrationExtensions.OverrideWebApiActionFilterFor``1(Autofac.ContainerBuilder)">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:System.Web.Http.Filters.IOverrideFilter"/> for the specified controller.
+            </summary>
+            <param name="builder">The container builder.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.WebApi.RegistrationExtensions.OverrideWebApiAuthorizationFilterFor``1(Autofac.ContainerBuilder,System.Linq.Expressions.Expression{System.Action{``0}})">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:System.Web.Http.Filters.IOverrideFilter"/> for the specified controller action.
+            </summary>
+            <param name="builder">The container builder.</param>
+            <param name="actionSelector">The action selector.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.WebApi.RegistrationExtensions.OverrideWebApiAuthorizationFilterFor``1(Autofac.ContainerBuilder)">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:System.Web.Http.Filters.IOverrideFilter"/> for the specified controller.
+            </summary>
+            <param name="builder">The container builder.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.WebApi.RegistrationExtensions.OverrideWebApiExceptionFilterFor``1(Autofac.ContainerBuilder,System.Linq.Expressions.Expression{System.Action{``0}})">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:System.Web.Http.Filters.IOverrideFilter"/> for the specified controller action.
+            </summary>
+            <param name="builder">The container builder.</param>
+            <param name="actionSelector">The action selector.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.WebApi.RegistrationExtensions.OverrideWebApiExceptionFilterFor``1(Autofac.ContainerBuilder)">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:System.Web.Http.Filters.IOverrideFilter"/> for the specified controller.
+            </summary>
+            <param name="builder">The container builder.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.WebApi.RegistrationExtensions.OverrideWebApiAuthenticationFilterFor``1(Autofac.ContainerBuilder,System.Linq.Expressions.Expression{System.Action{``0}})">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:System.Web.Http.Filters.IOverrideFilter"/> for the specified controller action.
+            </summary>
+            <param name="builder">The container builder.</param>
+            <param name="actionSelector">The action selector.</param>
+            <returns>A registration builder allowing further configuration of the component.</returns>
+        </member>
+        <member name="M:Autofac.Integration.WebApi.RegistrationExtensions.OverrideWebApiAuthenticationFilterFor``1(Autofac.ContainerBuilder)">
+            <summary>
+            Sets the provided registration to act as an <see cref="T:System.Web.Http.Filters.IOverrideFilter"/> for the specified controller.
+            </summary>
+            <param name="builder">The container builder.</param>
             <returns>A registration builder allowing further configuration of the component.</returns>
         </member>
         <member name="T:Autofac.Integration.WebApi.RegistrationExtensionsResources">

@@ -1,4 +1,5 @@
 ﻿using Bolt.RequestBus;
+using Sample.Infrastructure;
 using Sample.Infrastructure.PersistentStores;
 
 namespace Sample.Features.Shared
@@ -13,7 +14,7 @@ namespace Sample.Features.Shared
 
         public void Handle(TEvent eEvent)
         {
-            store.Write("EventSource", eEvent);
+            store.Write(Constants.PersistanceStoreNames.EventSource, new { Type = eEvent.GetType().GetFriendlyName(), Event =  eEvent});
         }
     }
 }

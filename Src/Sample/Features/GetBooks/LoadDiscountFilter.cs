@@ -14,6 +14,8 @@ namespace Sample.Features.GetBooks
 
         public override void OnCompleted(GetBookByIdRequest request, BookDto value)
         {
+            if(value == null) return;
+
             var discounts = proxy.Get(new[] {value.Id});
             value.Discount = discounts.FirstOrDefault(x => x.BookId == value.Id)?.Discount ?? 0;
         }
