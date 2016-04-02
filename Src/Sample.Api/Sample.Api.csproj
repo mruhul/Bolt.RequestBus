@@ -223,6 +223,10 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Features\CreateBook\BooksController.cs" />
+    <Compile Include="Features\GetBooks\BookDtoMappingTask.cs" />
+    <Compile Include="Features\GetBooks\BooksController.cs" />
+    <Compile Include="Features\Shared\Settings.cs" />
+    <Compile Include="Infrastructure\ContextStores\IContextStore.cs" />
     <Compile Include="Infrastructure\Extensions\ResponseExtensions.cs" />
     <Compile Include="Features\CreateBook\BookCreatedEvent.cs" />
     <Compile Include="Features\CreateBook\BookCreatedEventHandler.cs" />
@@ -249,10 +253,13 @@
     <Compile Include="Infrastructure\Extensions\RuleCheckerExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\TypeNameExtensions.cs" />
     <Compile Include="Infrastructure\IIgnoreEventSource.cs" />
+    <Compile Include="Infrastructure\Mappers\AutoMappedMapper.cs" />
+    <Compile Include="Infrastructure\Mappers\IMapper.cs" />
     <Compile Include="Infrastructure\IStartUpTask.cs" />
     <Compile Include="Infrastructure\PersistentStores\IPersistentStore.cs" />
     <Compile Include="Infrastructure\PersistentStores\JsonPersistentStore.cs" />
     <Compile Include="Infrastructure\PersistentStores\PersistentStoreExtensions.cs" />
+    <Compile Include="Infrastructure\RequestWrappers\HttpRequestContext.cs" />
     <Compile Include="Ioc\ConventionBasedModule.cs" />
     <Compile Include="Ioc\CoreModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

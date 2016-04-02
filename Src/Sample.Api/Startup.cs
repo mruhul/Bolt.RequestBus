@@ -9,6 +9,7 @@ using Bolt.Common.Extensions;
 using Bolt.Logger;
 using Microsoft.Owin;
 using Owin;
+using Sample.Api.Features.CreateBook;
 using Sample.Api.Infrastructure;
 using Sample.Api.Infrastructure.PersistentStores;
 
@@ -29,7 +30,6 @@ namespace Sample.Api
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
 
             builder.RegisterAssemblyModules(typeof(Startup).Assembly, 
-                typeof(IPersistentStore).Assembly,
                 typeof(Bolt.RequestBus.Autofac.DependencyResolver).Assembly);
 
             // OPTIONAL: Register the Autofac filter provider.
@@ -39,7 +39,7 @@ namespace Sample.Api
             var container = builder.Build();
 
             RunStartUpTask(container);
-
+            
             config.DependencyResolver = new AutofacWebApiDependencyResolver(container);
         }
 

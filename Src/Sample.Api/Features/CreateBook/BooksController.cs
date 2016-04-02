@@ -8,24 +8,15 @@ using Sample.Api.Infrastructure.Extensions;
 namespace Sample.Api.Features.CreateBook
 {
     [RoutePrefix("v1/books")]
-    public class BooksController : ApiController
+    public class CreateBooksController : ApiController
     {
         private readonly IRequestBus bus;
 
-        public BooksController(IRequestBus bus)
+        public CreateBooksController(IRequestBus bus)
         {
             this.bus = bus;
         }
-
-        [HttpGet]
-        [Route("{id}", Name = RouteNames.BookById)]
-        public IHttpActionResult Get([FromUri]GetBookByIdRequest request)
-        {
-            var response = bus.Send<GetBookByIdRequest, BookDto>(request);
-
-            return this.ResponseResult(response);
-        }
-
+        
         [HttpPost]
         [Route]
         public IHttpActionResult Post([FromBody] CreateBookRequest request)

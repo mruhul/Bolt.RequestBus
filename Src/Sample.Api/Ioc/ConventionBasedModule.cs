@@ -10,11 +10,11 @@ namespace Sample.Api.Ioc
         protected override void Load(ContainerBuilder builder)
         {
             var assemblies = new[]
-            {typeof (Startup).Assembly, typeof (IPersistentStore).Assembly};
+            {typeof (Startup).Assembly};
 
             builder.RegisterAssemblyTypes(assemblies)
                 .Where(a => a.IsClass && 
-                    (a.Name.EndsWith("Handler") 
+                    (a.Name.EndsWith("RequestHandler") 
                     || a.Name.EndsWith("Filter")
                     || a.Name.EndsWith("Proxy")
                     || a.Name.EndsWith("Validator")

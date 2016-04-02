@@ -7,7 +7,7 @@ namespace Sample.Api.Features.Shared.Extensions
     {
         public static Uri BookById(this UrlHelper url, Guid id)
         {
-            return new Uri(url.Route(RouteNames.BookById, new {id = id}));
+            return new Uri(url.Route(RouteNames.BookById, new {id = id}), UriKind.RelativeOrAbsolute);
         }
     }
 
