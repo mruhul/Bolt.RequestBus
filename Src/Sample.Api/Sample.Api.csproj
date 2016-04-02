@@ -52,6 +52,10 @@
       <HintPath>..\packages\Autofac.WebApi2.3.4.0\lib\net45\Autofac.Integration.WebApi.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="AutoMapper, Version=4.2.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.4.2.1\lib\net45\AutoMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Bolt.Common.Extensions, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Bolt.Common.Extensions.1.0.4.0\lib\net45\Bolt.Common.Extensions.dll</HintPath>
@@ -219,7 +223,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Features\CreateBook\BooksController.cs" />
-    <Compile Include="Controllers\ResponseExtensions.cs" />
+    <Compile Include="Infrastructure\Extensions\ResponseExtensions.cs" />
     <Compile Include="Features\CreateBook\BookCreatedEvent.cs" />
     <Compile Include="Features\CreateBook\BookCreatedEventHandler.cs" />
     <Compile Include="Features\CreateBook\CreateBookRequest.cs" />
@@ -228,6 +232,7 @@
     <Compile Include="Features\CreateBook\InputValidator.cs" />
     <Compile Include="Features\CreateBook\UniqueBookValidator.cs" />
     <Compile Include="Features\GetBooks\BookDto.cs" />
+    <Compile Include="Features\GetBooks\BookRepository.cs" />
     <Compile Include="Features\GetBooks\DiscountDto.cs" />
     <Compile Include="Features\GetBooks\DummyDiscountApiProxy.cs" />
     <Compile Include="Features\GetBooks\GetBookByIdRequest.cs" />
@@ -244,6 +249,7 @@
     <Compile Include="Infrastructure\Extensions\RuleCheckerExtensions.cs" />
     <Compile Include="Infrastructure\Extensions\TypeNameExtensions.cs" />
     <Compile Include="Infrastructure\IIgnoreEventSource.cs" />
+    <Compile Include="Infrastructure\IStartUpTask.cs" />
     <Compile Include="Infrastructure\PersistentStores\IPersistentStore.cs" />
     <Compile Include="Infrastructure\PersistentStores\JsonPersistentStore.cs" />
     <Compile Include="Infrastructure\PersistentStores\PersistentStoreExtensions.cs" />

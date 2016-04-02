@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Bolt.RequestBus;
+using Sample.Api.Infrastructure;
 using Sample.Api.Infrastructure.PersistentStores;
 
 namespace Sample.Api.Ioc
@@ -19,6 +20,10 @@ namespace Sample.Api.Ioc
                     || a.Name.EndsWith("Validator")
                     || a.Name.EndsWith("Repository")
                     || a.Name.EndsWith("Store")))
+                .AsImplementedInterfaces();
+
+            builder.RegisterAssemblyTypes(assemblies)
+                .AssignableTo<IStartUpTask>()
                 .AsImplementedInterfaces();
 
             builder.RegisterGeneric(typeof (Features.Shared.EventSourceHandler<>)).As(typeof (IEventHandler<>));

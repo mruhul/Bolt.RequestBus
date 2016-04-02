@@ -7,25 +7,26 @@ namespace Sample.Api.Features.GetBooks
 {
     public class GetBooksByIdRequestHandler : RequestHandlerBase<GetBookByIdRequest, BookDto>
     {
-        private readonly IPersistentStore store;
+        private readonly IBookRepository repository;
 
-        public GetBooksByIdRequestHandler(IPersistentStore store)
+        public GetBooksByIdRequestHandler(IBookRepository repository)
         {
-            this.store = store;
+            this.repository = repository;
         }
 
         protected override BookDto Process(GetBookByIdRequest msg)
         {
-            return store.Read<BookRecord>()
-                .Where(x => x.Id == msg.Id)
-                .Select(x => new BookDto
+            var result = repository.GetById(msg.Id);
+
+            return result != null 
+                ? new BookDto
                 {
-                    Id = x.Id,
-                    Title = x.Title,
-                    Price = x.Price,
-                    Author = x.Author
-                })
-                .FirstOrDefault(record => record.Id == msg.Id);
+                    Id = result.Id,
+                    Title = result.Title,
+                    Price = result.Price,
+                    Author = result.Author
+                } 
+                : null;
         }
     }
 }

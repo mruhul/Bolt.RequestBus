@@ -1,4 +1,5 @@
 using Autofac;
+using AutoMapper;
 using Bolt.Logger;
 
 namespace Sample.Api.Ioc

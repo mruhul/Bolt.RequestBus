@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Web.Http;
 using Bolt.RequestBus;
-using Sample.Api.Controllers;
 using Sample.Api.Features.GetBooks;
 using Sample.Api.Features.Shared.Extensions;
+using Sample.Api.Infrastructure.Extensions;
 
 namespace Sample.Api.Features.CreateBook
 {
@@ -27,7 +27,7 @@ namespace Sample.Api.Features.CreateBook
         }
 
         [HttpPost]
-        [Route("")]
+        [Route]
         public IHttpActionResult Post([FromBody] CreateBookRequest request)
         {
             var response = bus.Send<CreateBookRequest, Guid>(request);
