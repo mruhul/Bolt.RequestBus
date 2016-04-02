@@ -31,6 +31,24 @@ namespace Sample.Api.Controllers
 
             return new NegotiatedContentResult<dynamic>(HttpStatusCode.BadRequest, new {response.Errors }, controller);
             
-        } 
+        }
+
+        public static IHttpActionResult ResponseResult<TValue>(this ApiController controller,
+            IResponse<TValue> response,
+            Func<TValue,Uri> uri)
+        {
+            if (response.Succeed)
+            {
+                if (response.Value == null)
+                {
+                    return new NotFoundResult(controller.Request);
+                }
+
+                return new CreatedNegotiatedContentResult<TValue>(uri.Invoke(response.Value), response.Value, controller);
+            }
+
+            return new NegotiatedContentResult<dynamic>(HttpStatusCode.BadRequest, new { response.Errors }, controller);
+
+        }
     }
 }

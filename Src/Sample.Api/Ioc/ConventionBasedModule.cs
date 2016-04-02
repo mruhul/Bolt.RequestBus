@@ -1,7 +1,6 @@
 ﻿using Autofac;
-using Bolt.Logger;
 using Bolt.RequestBus;
-using Sample.Features.Shared;
+using Sample.Api.Infrastructure.PersistentStores;
 
 namespace Sample.Api.Ioc
 {
@@ -10,7 +9,7 @@ namespace Sample.Api.Ioc
         protected override void Load(ContainerBuilder builder)
         {
             var assemblies = new[]
-            {typeof (Startup).Assembly, typeof (Sample.Infrastructure.PersistentStores.IPersistentStore).Assembly};
+            {typeof (Startup).Assembly, typeof (IPersistentStore).Assembly};
 
             builder.RegisterAssemblyTypes(assemblies)
                 .Where(a => a.IsClass && 
@@ -18,24 +17,11 @@ namespace Sample.Api.Ioc
                     || a.Name.EndsWith("Filter")
                     || a.Name.EndsWith("Proxy")
                     || a.Name.EndsWith("Validator")
+                    || a.Name.EndsWith("Repository")
                     || a.Name.EndsWith("Store")))
                 .AsImplementedInterfaces();
 
-            builder.RegisterGeneric(typeof (EventSourceHandler<>)).As(typeof (IEventHandler<>));
-        }
-    }
-
-    public class CoreModule : Module
-    {
-        protected override void Load(ContainerBuilder builder)
-        {
-            builder.Register(x => Bolt.Logger.NLog.LoggerFactory.Create(typeof (Startup)))
-                .As<ILogger>()
-                .SingleInstance();
-
-            builder.RegisterType<Bolt.Serializer.Json.JsonSerializer>()
-                .As<Bolt.Serializer.ISerializer>()
-                .SingleInstance();
+            builder.RegisterGeneric(typeof (Features.Shared.EventSourceHandler<>)).As(typeof (IEventHandler<>));
         }
     }
 }

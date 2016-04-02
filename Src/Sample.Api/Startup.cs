@@ -7,6 +7,7 @@ using Autofac;
 using Autofac.Integration.WebApi;
 using Microsoft.Owin;
 using Owin;
+using Sample.Api.Infrastructure.PersistentStores;
 
 [assembly: OwinStartup(typeof(Sample.Api.Startup))]
 
@@ -25,7 +26,7 @@ namespace Sample.Api
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
 
             builder.RegisterAssemblyModules(typeof(Startup).Assembly, 
-                typeof(Sample.Infrastructure.PersistentStores.IPersistentStore).Assembly,
+                typeof(IPersistentStore).Assembly,
                 typeof(Bolt.RequestBus.Autofac.DependencyResolver).Assembly);
 
             // OPTIONAL: Register the Autofac filter provider.

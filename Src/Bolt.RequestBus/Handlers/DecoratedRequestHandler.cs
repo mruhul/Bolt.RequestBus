@@ -42,6 +42,8 @@ namespace Bolt.RequestBus.Handlers
                 }
             }
 
+            bus.Publish(new RequestValidated<TRequest>(msg));
+
             foreach (var filter in filters)
             {
                 filter.OnValidated(msg);
@@ -91,6 +93,8 @@ namespace Bolt.RequestBus.Handlers
                     return Response.Failed<TValue>(errors);
                 }
             }
+
+            bus.Publish(new RequestValidated<TRequest>(msg));
 
             foreach (var filter in filters)
             {
