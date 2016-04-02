@@ -30,8 +30,12 @@ namespace Bolt.RequestBus.Handlers
                 filter.OnInit(msg);
             }
 
+            var hasValidator = false;
+
             foreach (var validator in validators.OrderBy(x => x.Order))
             {
+                hasValidator = true;
+
                 var errors = validator.Validate(msg)?.ToArray();
 
                 if (errors?.Length > 0)
@@ -42,7 +46,10 @@ namespace Bolt.RequestBus.Handlers
                 }
             }
 
-            bus.Publish(new RequestValidated<TRequest>(msg));
+            if (hasValidator)
+            {
+                bus.Publish(new RequestValidated<TRequest>(msg));
+            }
 
             foreach (var filter in filters)
             {
@@ -82,8 +89,12 @@ namespace Bolt.RequestBus.Handlers
                 filter.OnInit(msg);
             }
 
+            var hasValidator = false;
+
             foreach (var validator in validators.OrderBy(x =>  x.Order))
             {
+                hasValidator = true;
+
                 var errors = validator.Validate(msg)?.ToArray();
 
                 if (errors?.Length > 0)
@@ -94,7 +105,10 @@ namespace Bolt.RequestBus.Handlers
                 }
             }
 
-            bus.Publish(new RequestValidated<TRequest>(msg));
+            if (hasValidator)
+            {
+                bus.Publish(new RequestValidated<TRequest>(msg));
+            }
 
             foreach (var filter in filters)
             {

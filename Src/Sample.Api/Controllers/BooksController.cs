@@ -53,7 +53,7 @@ namespace Sample.Api.Controllers
         [HttpDelete]
         public async Task<IHttpActionResult> Delete([FromUri] DeleteBookRequest request)
         {
-            var response = await bus.SendAsync<DeleteBookRequest>(request);
+            var response = await bus.SendAsync(request);
             
             return this.ResponseResult(response);
         }

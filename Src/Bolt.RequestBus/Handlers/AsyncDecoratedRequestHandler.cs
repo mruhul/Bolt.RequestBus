@@ -34,8 +34,12 @@ namespace Bolt.RequestBus.Handlers
                 await filter.OnInitAsync(msg);
             }
 
+            var hasValidator = false;
+
             foreach (var validator in validators.OrderBy(x => x.Order))
             {
+                hasValidator = true;
+
                 var errors = (await validator.ValidateAsync(msg))?.ToArray();
 
                 if (errors?.Length > 0)
@@ -46,7 +50,10 @@ namespace Bolt.RequestBus.Handlers
                 }
             }
 
-            await bus.PublishAsync(new RequestValidated<TRequest>(msg));
+            if (hasValidator)
+            {
+                await bus.PublishAsync(new RequestValidated<TRequest>(msg));
+            }
 
             foreach (var filter in filters)
             {
@@ -89,8 +96,12 @@ namespace Bolt.RequestBus.Handlers
                 await filter.OnInitAsync(msg);
             }
 
+            var hasValidator = false;
+
             foreach (var validator in validators.OrderBy(x => x.Order))
             {
+                hasValidator = true;
+
                 var errors = (await validator.ValidateAsync(msg))?.ToArray();
 
                 if (errors?.Length > 0)
@@ -101,7 +112,10 @@ namespace Bolt.RequestBus.Handlers
                 }
             }
 
-            await bus.PublishAsync(new RequestValidated<TRequest>(msg));
+            if (hasValidator)
+            {
+                await bus.PublishAsync(new RequestValidated<TRequest>(msg));
+            }
 
             foreach (var filter in filters)
             {
