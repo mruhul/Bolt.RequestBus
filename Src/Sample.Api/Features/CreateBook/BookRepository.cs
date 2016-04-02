@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Bolt.Common.Extensions;
 using Sample.Api.Features.Shared;
+using Sample.Api.Features.Shared.Dto;
 using Sample.Api.Infrastructure.PersistentStores;
 
 namespace Sample.Api.Features.CreateBook

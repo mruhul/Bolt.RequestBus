@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Sample.Api.Features.Shared
+namespace Sample.Api.Features.Shared.Dto
 {
     public class BookRecord
     {

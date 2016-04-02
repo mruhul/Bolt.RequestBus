@@ -3,6 +3,7 @@ using Bolt.Logger;
 using Bolt.RequestBus;
 using Bolt.RequestBus.Handlers;
 using Sample.Api.Features.Shared;
+using Sample.Api.Features.Shared.Dto;
 using Sample.Api.Infrastructure.PersistentStores;
 
 namespace Sample.Api.Features.CreateBook

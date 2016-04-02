@@ -222,9 +222,9 @@
   <ItemGroup>
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Features\CreateBook\BooksController.cs" />
     <Compile Include="Features\GetBooks\BookDtoMappingTask.cs" />
-    <Compile Include="Features\GetBooks\BooksController.cs" />
+    <Compile Include="Controllers\BooksController.cs" />
+    <Compile Include="Features\GetBooks\GetAllBooksRequestHandler.cs" />
     <Compile Include="Features\Shared\Settings.cs" />
     <Compile Include="Infrastructure\ContextStores\IContextStore.cs" />
     <Compile Include="Infrastructure\Extensions\ResponseExtensions.cs" />
@@ -243,7 +243,7 @@
     <Compile Include="Features\GetBooks\GetBooksByIdRequestHandler.cs" />
     <Compile Include="Features\GetBooks\IDiscountApiProxy.cs" />
     <Compile Include="Features\GetBooks\LoadDiscountFilter.cs" />
-    <Compile Include="Features\Shared\BookRecord.cs" />
+    <Compile Include="Features\Shared\Dto\BookRecord.cs" />
     <Compile Include="Features\Shared\Constants.cs" />
     <Compile Include="Features\Shared\EventSourceHandler.cs" />
     <Compile Include="Features\Shared\Extensions\UrlHelperExtensions.cs" />
@@ -278,6 +278,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Features\DeleteBook\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

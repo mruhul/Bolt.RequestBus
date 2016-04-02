@@ -1,4 +1,5 @@
 ﻿using Sample.Api.Features.Shared;
+using Sample.Api.Features.Shared.Dto;
 using Sample.Api.Infrastructure;
 
 namespace Sample.Api.Features.GetBooks

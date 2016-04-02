@@ -27,6 +27,7 @@ namespace Sample.Api.Ioc
                 .AsImplementedInterfaces();
 
             builder.RegisterGeneric(typeof (Features.Shared.EventSourceHandler<>)).As(typeof (IEventHandler<>));
+            builder.RegisterGeneric(typeof(Features.Shared.EventSourceHandler<>)).As(typeof(IAsyncEventHandler<>));
         }
     }
 }

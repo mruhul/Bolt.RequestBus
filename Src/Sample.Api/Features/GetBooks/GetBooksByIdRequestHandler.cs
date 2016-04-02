@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Bolt.Common.Extensions;
+﻿using Bolt.Common.Extensions;
 using Bolt.RequestBus.Handlers;
 using Sample.Api.Features.Shared;
 using Sample.Api.Infrastructure;

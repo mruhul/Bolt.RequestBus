@@ -7,4 +7,8 @@ namespace Sample.Api.Features.GetBooks
     {
         public Guid Id { get; set; }
     }
+
+    public class GetAllBooksRequest : IRequest
+    {
+    }
 }
