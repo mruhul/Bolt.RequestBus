@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Bolt.RequestBus")]
-[assembly: AssemblyDescription("A simple library to dispatching command, query and message in process and support easy integration pushing events to eventsource system")]
+[assembly: AssemblyDescription("A simple library for dispatching command, query and message in process and support of easy integration of pushing events to eventsource system")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Mohammad Ruhul Amin")]
 [assembly: AssemblyProduct("Bolt.RequestBus")]

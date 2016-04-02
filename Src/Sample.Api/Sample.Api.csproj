@@ -68,8 +68,8 @@
       <HintPath>..\packages\Bolt.Logger.NLog.1.0.0.1\lib\net45\Bolt.Logger.NLog.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Bolt.RequestBus, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Bolt.RequestBus.1.0.0.1\lib\net46\Bolt.RequestBus.dll</HintPath>
+    <Reference Include="Bolt.RequestBus, Version=1.0.0.2, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Bolt.RequestBus.1.0.0.2\lib\net46\Bolt.RequestBus.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Bolt.RequestBus.Autofac, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
