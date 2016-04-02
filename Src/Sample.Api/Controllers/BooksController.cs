@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Bolt.RequestBus;
 using Sample.Api.Features.CreateBook;
+using Sample.Api.Features.DeleteBook;
 using Sample.Api.Features.GetBooks;
 using Sample.Api.Features.Shared.Extensions;
 using Sample.Api.Infrastructure.Extensions;
@@ -45,6 +47,15 @@ namespace Sample.Api.Controllers
             var response = bus.Send<CreateBookRequest, Guid>(request);
 
             return this.ResponseResult(response, id => Url.BookById(id));
+        }
+
+        [Route("{id}")]
+        [HttpDelete]
+        public async Task<IHttpActionResult> Delete([FromUri] DeleteBookRequest request)
+        {
+            var response = await bus.SendAsync<DeleteBookRequest>(request);
+            
+            return this.ResponseResult(response);
         }
     }
 }

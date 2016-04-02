@@ -28,6 +28,21 @@ namespace Sample.Api.Infrastructure.Extensions
             
         }
 
+        public static IHttpActionResult ResponseResult(this ApiController controller,
+            IResponse response,
+            Func<IHttpActionResult> buildResult = null)
+        {
+            if (response.Succeed)
+            {
+                return buildResult == null
+                    ? new OkResult(controller)
+                    : buildResult.Invoke();
+            }
+
+            return new NegotiatedContentResult<dynamic>(HttpStatusCode.BadRequest, new { response.Errors }, controller);
+
+        }
+
         public static IHttpActionResult ResponseResult<TValue>(this ApiController controller,
             IResponse<TValue> response,
             Func<TValue,Uri> uri)

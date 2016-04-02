@@ -222,6 +222,9 @@
   <ItemGroup>
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Features\DeleteBook\BookRepository.cs" />
+    <Compile Include="Features\DeleteBook\DeleteBookRequest.cs" />
+    <Compile Include="Features\DeleteBook\DeleteBookRequestHandler.cs" />
     <Compile Include="Features\GetBooks\BookDtoMappingTask.cs" />
     <Compile Include="Controllers\BooksController.cs" />
     <Compile Include="Features\GetBooks\GetAllBooksRequestHandler.cs" />
@@ -278,7 +281,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Features\DeleteBook\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
