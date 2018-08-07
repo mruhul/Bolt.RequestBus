@@ -1,0 +1,64 @@
+﻿using System.Threading.Tasks;
+
+namespace Bolt.RequestBus
+{
+    public interface IResponseHandlerAsync<TResult> : IApplicable
+    {
+        Task<IResponse<TResult>> Handle(IExecutionContext context);
+        ExecutionHintType ExecutionHint { get; }
+    }
+
+    public abstract class ResponseHandlerAsync<TResult> : IResponseHandlerAsync<TResult>
+    {
+        public virtual ExecutionHintType ExecutionHint => ExecutionHintType.Independent;
+
+        public abstract Task<IResponse<TResult>> Handle(IExecutionContext context);
+
+        public bool IsApplicable(IExecutionContext context) => true;
+    }
+
+    public abstract class MainResponseHandlerAsync<TResult> : IResponseHandlerAsync<TResult>
+    {
+        public ExecutionHintType ExecutionHint => ExecutionHintType.Main;
+
+        public abstract Task<IResponse<TResult>> Handle(IExecutionContext context);
+
+        public bool IsApplicable(IExecutionContext context) => true;
+    }
+
+    public interface IResponseHandlerAsync<TRequest, TResult> : IApplicable<TRequest>
+    {
+        Task<IResponse<TResult>> Handle(IExecutionContext context, TRequest request);
+        ExecutionHintType ExecutionHint { get; }
+    }
+
+    public abstract class ResponseHandlerAsync<TRequest,TResult> : IResponseHandlerAsync<TRequest, TResult>
+    {
+        public virtual ExecutionHintType ExecutionHint => ExecutionHintType.Independent;
+
+        Task<IResponse<TResult>> IResponseHandlerAsync<TRequest, TResult>.Handle(IExecutionContext context, TRequest request)
+        {
+            return this.Handle(context, request)
+                    .ContinueWith(t => Response.Succeed(t.Result));
+        }
+
+        protected abstract Task<TResult> Handle(IExecutionContext context, TRequest request);
+
+        public bool IsApplicable(IExecutionContext context, TRequest request) => true;
+    }
+
+    public abstract class MainResponseHandlerAsync<TRequest, TResult> : IResponseHandlerAsync<TRequest, TResult>
+    {
+        public ExecutionHintType ExecutionHint => ExecutionHintType.Main;
+
+        Task<IResponse<TResult>> IResponseHandlerAsync<TRequest, TResult>.Handle(IExecutionContext context, TRequest request)
+        {
+            return this.Handle(context, request)
+                    .ContinueWith(t => Response.Succeed(t.Result));
+        }
+
+        protected abstract Task<TResult> Handle(IExecutionContext context, TRequest request);
+
+        public bool IsApplicable(IExecutionContext context, TRequest request) => true;
+    }
+}

@@ -181,3 +181,5 @@ $RECYCLE.BIN/
 
 #nuget package creator
 _CreateNewNuGetPackage/Config.ps1
+v15
+.vs
