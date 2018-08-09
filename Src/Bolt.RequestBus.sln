@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27703.2042
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bolt.RequestBus", "Bolt.RequestBus\Bolt.RequestBus.csproj", "{3BD22B72-4891-4927-A73F-1900272E7D28}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bolt.RequestBus.Tests", "Bolt.RequestBus.Tests\Bolt.RequestBus.Tests.csproj", "{ABAF4786-94EE-45EC-8664-A20BABDF9FAD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{3BD22B72-4891-4927-A73F-1900272E7D28}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3BD22B72-4891-4927-A73F-1900272E7D28}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3BD22B72-4891-4927-A73F-1900272E7D28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABAF4786-94EE-45EC-8664-A20BABDF9FAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABAF4786-94EE-45EC-8664-A20BABDF9FAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABAF4786-94EE-45EC-8664-A20BABDF9FAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABAF4786-94EE-45EC-8664-A20BABDF9FAD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

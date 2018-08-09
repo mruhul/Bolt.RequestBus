@@ -88,9 +88,22 @@ namespace Bolt.RequestBus
 
         public async Task<IEnumerable<IResponseUnit<TResult>>> GetAllAsync<TRequest, TResult>(TRequest request)
         {
+            var context = await _serviceProvider.BuildContextAsync();
+
+            var errors = await _serviceProvider.ValidateAsync(context, request);
+
             var result = new List<IResponseUnit<TResult>>();
 
-            var context = await _serviceProvider.BuildContextAsync();
+            if (errors.Any())
+            {
+                result.Add(new ResponseUnit<TResult> {
+                    Errors = errors,
+                    IsMainResponse = true,
+                    IsSucceed = false
+                });
+
+                return result;
+            }
 
             var allApplicableHandlers = _serviceProvider.GetServices<IResponseHandlerAsync<TRequest,TResult>>()
                                ?.Where(t => t.IsApplicable(context, request))
@@ -179,6 +192,13 @@ namespace Bolt.RequestBus
         public async Task<IResponse<TResult>> GetAsync<TRequest, TResult>(TRequest request)
         {
             var context = await _serviceProvider.BuildContextAsync();
+
+            var errors = await _serviceProvider.ValidateAsync(context, request);
+
+            if (errors.Any())
+            {
+                return Response.Failed<TResult>(errors);
+            }
 
             var handler = _serviceProvider.GetServices<IResponseHandlerAsync<TRequest,TResult>>()
                             ?.Where(h => h.IsApplicable(context, request)).FirstOrDefault();

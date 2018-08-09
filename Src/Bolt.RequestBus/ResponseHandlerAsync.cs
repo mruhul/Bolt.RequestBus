@@ -12,18 +12,28 @@ namespace Bolt.RequestBus
     {
         public virtual ExecutionHintType ExecutionHint => ExecutionHintType.Independent;
 
-        public abstract Task<IResponse<TResult>> Handle(IExecutionContext context);
+        Task<IResponse<TResult>> IResponseHandlerAsync<TResult>.Handle(IExecutionContext context)
+        {
+            return Handle(context).ContinueWith(h => Response.Succeed(h.Result));
+        }
 
-        public bool IsApplicable(IExecutionContext context) => true;
+        protected abstract Task<TResult> Handle(IExecutionContext context);
+
+        public virtual bool IsApplicable(IExecutionContext context) => true;
     }
 
     public abstract class MainResponseHandlerAsync<TResult> : IResponseHandlerAsync<TResult>
     {
         public ExecutionHintType ExecutionHint => ExecutionHintType.Main;
 
-        public abstract Task<IResponse<TResult>> Handle(IExecutionContext context);
+        Task<IResponse<TResult>> IResponseHandlerAsync<TResult>.Handle(IExecutionContext context)
+        {
+            return Handle(context).ContinueWith(h => Response.Succeed(h.Result));
+        }
 
-        public bool IsApplicable(IExecutionContext context) => true;
+        protected abstract Task<TResult> Handle(IExecutionContext context);
+
+        public virtual bool IsApplicable(IExecutionContext context) => true;
     }
 
     public interface IResponseHandlerAsync<TRequest, TResult> : IApplicable<TRequest>
@@ -44,7 +54,7 @@ namespace Bolt.RequestBus
 
         protected abstract Task<TResult> Handle(IExecutionContext context, TRequest request);
 
-        public bool IsApplicable(IExecutionContext context, TRequest request) => true;
+        public virtual bool IsApplicable(IExecutionContext context, TRequest request) => true;
     }
 
     public abstract class MainResponseHandlerAsync<TRequest, TResult> : IResponseHandlerAsync<TRequest, TResult>
@@ -59,6 +69,6 @@ namespace Bolt.RequestBus
 
         protected abstract Task<TResult> Handle(IExecutionContext context, TRequest request);
 
-        public bool IsApplicable(IExecutionContext context, TRequest request) => true;
+        public virtual bool IsApplicable(IExecutionContext context, TRequest request) => true;
     }
 }
