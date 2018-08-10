@@ -28,24 +28,36 @@ namespace Bolt.RequestBus
 
             if (handlers == null) return Task.FromResult(0);
 
-            var tasks = handlers.Select(h => ExecutionHelper.Execute(async () => {
+            var tasks = handlers.Select(async h => {
 
                 if (!failSafe)
                 {
+#if DEBUG
+                    var timer = Timer.Start(logger, h);
+#endif 
                     await h.Handle(context, evnt);
+#if DEBUG
+                    timer.Completed();
+#endif
                 }
                 else
                 {
                     try
                     {
+#if DEBUG
+                        var timer = Timer.Start(logger, h);
+#endif 
                         await h.Handle(context, evnt);
+#if DEBUG
+                        timer.Completed();
+#endif
                     }
                     catch (Exception e)
                     {
                         logger.LogError(e, e.Message);
                     }
                 }
-            }, h, logger));
+            });
 
             return Task.WhenAll(tasks);
         }

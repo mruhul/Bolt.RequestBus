@@ -19,18 +19,11 @@ namespace Bolt.RequestBus
             foreach(var filter in filters)
             {
 #if DEBUG
-                var sw = Stopwatch.StartNew();
-
-                logger.LogDebug($"Start executing response filter {filter.GetType().FullName}");
+                var timer = Timer.Start(logger, filter);
 #endif
                 await filter.Filter(context, response);
-
 #if DEBUG
-                logger.LogDebug($"Finished executing response filter {filter.GetType().FullName}");
-
-                sw.Stop();
-
-                logger.LogInformation($"{filter.GetType().Name}|{sw.ElapsedMilliseconds}ms");
+                timer.Completed();
 #endif
             }
         }
@@ -45,19 +38,12 @@ namespace Bolt.RequestBus
             foreach (var filter in filters)
             {
 #if DEBUG
-                var sw = Stopwatch.StartNew();
-
-                logger.LogDebug($"Start executing response filter {filter.GetType().FullName}");
+                var timer = Timer.Start(logger, filter);
 #endif
-
                 await filter.Filter(context, request, response);
 
 #if DEBUG
-                logger.LogDebug($"Finished executing response filter {filter.GetType().FullName}");
-
-                sw.Stop();
-
-                logger.LogInformation($"{filter.GetType().Name}|{sw.ElapsedMilliseconds}ms");
+                timer.Completed();
 #endif  
             }
         }

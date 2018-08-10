@@ -65,7 +65,14 @@ namespace Bolt.RequestBus
                 throw new RequestBusException($"No request handler found that implement IRequestHandlerAsync<{typeof(TRequest).FullName}>");
             }
 
-            return await ExecutionHelper.Execute(() => handler.Handle(context, request), handler, logger);
+#if DEBUG
+            var timer = Timer.Start(logger, handler);
+#endif
+            var result = await handler.Handle(context, request);
+#if DEBUG
+            timer.Completed();
+#endif
+            return result;
         }
 
         internal static async Task<IResponse<TResult>> SendAsync<TRequest,TResult>(IServiceProvider serviceProvider, IExecutionContext context, ILogger logger, TRequest request, bool failSafe)
@@ -87,7 +94,13 @@ namespace Bolt.RequestBus
                 throw new RequestBusException($"No request handler found that implement IRequestHandlerAsync<{typeof(TRequest).FullName},{typeof(TResult).FullName}>");
             }
 
-            var result = await ExecutionHelper.Execute(() => handler.Handle(context, request), handler, logger);
+#if DEBUG
+            var timer = Timer.Start(logger, handler);
+#endif
+            var result = await handler.Handle(context, request);
+#if DEBUG
+            timer.Completed();
+#endif
 
             await serviceProvider.FilterAsync(context, request, result, logger);
 
