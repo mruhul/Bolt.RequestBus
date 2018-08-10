@@ -4,6 +4,7 @@ using System;
 using System.Threading.Tasks;
 using Xunit;
 using Shouldly;
+using Microsoft.Extensions.Logging;
 
 namespace Bolt.RequestBus.Tests
 {
@@ -15,6 +16,7 @@ namespace Bolt.RequestBus.Tests
         {
             var collection = new ServiceCollection();
             collection.AddRequestBus();
+            collection.AddLogging(configure => configure.AddConsole());
             collection.AddTransient<IResponseHandlerAsync<Customer>, GetCustomerHandler>();
             collection.AddTransient<IResponseHandlerAsync<Customer>, GetCustomer2Handler>();
             sp = collection.BuildServiceProvider();
