@@ -4,9 +4,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Bolt.RequestBus.Tests
 {
-    public class ServiceProviderFixture
+    public static class ServiceProviderBuilder
     {        
-        public IServiceProvider BuildProvider(Action<IServiceCollection> action)
+        public static IServiceProvider Build(Action<IServiceCollection> action)
         {
             var sc = new ServiceCollection();
             sc.AddRequestBus();

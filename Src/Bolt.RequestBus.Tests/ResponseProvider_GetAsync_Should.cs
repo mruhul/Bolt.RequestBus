@@ -7,23 +7,16 @@ using Shouldly;
 
 namespace Bolt.RequestBus.Tests
 {
-    public class ResponseProvider_GetAsync_Should : IClassFixture<ServiceProviderFixture>
+    public class ResponseProvider_GetAsync_Should
     {
-        private readonly ServiceProviderFixture _fixture;
-
-        public ResponseProvider_GetAsync_Should(ServiceProviderFixture fixture)
-        {
-            _fixture = fixture;   
-        }
-
         [Fact]
         public async Task Return_Correct_Response()
         {
-            var sp = _fixture.BuildProvider(collection => {
-                collection.AddTransient<IExecutionContextInitializerAsync, Customer1ExecutionContext>();
-                collection.AddTransient<IResponseFilterAsync<Customer>, CustomerFilter>();
-                collection.AddTransient<IResponseHandlerAsync<Customer>, GetCustomerHandler>();
-                collection.AddTransient<IResponseHandlerAsync<Customer>, GetCustomer2Handler>();
+            var sp = ServiceProviderBuilder.Build(c => {
+                c.AddTransient<IExecutionContextInitializerAsync, Customer1ExecutionContext>();
+                c.AddTransient<IResponseFilterAsync<Customer>, CustomerFilter>();
+                c.AddTransient<IResponseHandlerAsync<Customer>, GetCustomerHandler>();
+                c.AddTransient<IResponseHandlerAsync<Customer>, GetCustomer2Handler>();
             });
 
             var response = sp.GetService<IResponseProvider>();
@@ -32,13 +25,13 @@ namespace Bolt.RequestBus.Tests
         }
 
         [Fact]
-        public async Task Return_Pick_Correct_Handler()
+        public async Task Pick_Correct_Handler()
         {
-            var sp = _fixture.BuildProvider(collection => {
-                collection.AddTransient<IExecutionContextInitializerAsync, Customer2ExecutionContext>();
-                collection.AddTransient<IResponseFilterAsync<Customer>, CustomerFilter>();
-                collection.AddTransient<IResponseHandlerAsync<Customer>, GetCustomerHandler>();
-                collection.AddTransient<IResponseHandlerAsync<Customer>, GetCustomer2Handler>();
+            var sp = ServiceProviderBuilder.Build(c => {
+                c.AddTransient<IExecutionContextInitializerAsync, Customer2ExecutionContext>();
+                c.AddTransient<IResponseFilterAsync<Customer>, CustomerFilter>();
+                c.AddTransient<IResponseHandlerAsync<Customer>, GetCustomerHandler>();
+                c.AddTransient<IResponseHandlerAsync<Customer>, GetCustomer2Handler>();
             });
 
             var response = sp.GetService<IResponseProvider>();
@@ -47,32 +40,17 @@ namespace Bolt.RequestBus.Tests
         }
 
         [Fact]
-        public async Task Throw_Exception_When_No_Handler_Available()
+        public async Task Throw_Exception_When_No_Applicable_Handler_Available()
         {
-            var sp = _fixture.BuildProvider(collection => {
-                collection.AddTransient<IExecutionContextInitializerAsync, CustomerNoneExecutionContext>();
-                collection.AddTransient<IResponseFilterAsync<Customer>, CustomerFilter>();
-                collection.AddTransient<IResponseHandlerAsync<Customer>, GetCustomerHandler>();
-                collection.AddTransient<IResponseHandlerAsync<Customer>, GetCustomer2Handler>();
+            var sp = ServiceProviderBuilder.Build(c => {
+                c.AddTransient<IExecutionContextInitializerAsync, CustomerNoneExecutionContext>();
+                c.AddTransient<IResponseFilterAsync<Customer>, CustomerFilter>();
+                c.AddTransient<IResponseHandlerAsync<Customer>, GetCustomerHandler>();
+                c.AddTransient<IResponseHandlerAsync<Customer>, GetCustomer2Handler>();
             });
 
             var response = sp.GetService<IResponseProvider>();
             await Should.ThrowAsync<RequestBusException>(response.GetAsync<Customer>());
-        }
-
-        [Fact]
-        public async Task Not_Throw_Exception_When_No_Handler_Available()
-        {
-            var sp = _fixture.BuildProvider(collection => {
-                collection.AddTransient<IExecutionContextInitializerAsync, CustomerNoneExecutionContext>();
-                collection.AddTransient<IResponseFilterAsync<Customer>, CustomerFilter>();
-                collection.AddTransient<IResponseHandlerAsync<Customer>, GetCustomerHandler>();
-                collection.AddTransient<IResponseHandlerAsync<Customer>, GetCustomer2Handler>();
-            });
-
-            var response = sp.GetService<IResponseProvider>();
-            var rslt = await response.TryGetAsync<Customer>();
-            rslt.ShouldBeNull();
         }
     }
 
