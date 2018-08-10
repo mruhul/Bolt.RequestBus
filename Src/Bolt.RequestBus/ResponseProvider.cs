@@ -168,28 +168,7 @@ namespace Bolt.RequestBus
         {
             var context = await _serviceProvider.BuildContextAsync();
 
-            var handler = _serviceProvider.GetServices<IResponseHandlerAsync<TResult>>()
-                            ?.Where(h => h.IsApplicable(context)).FirstOrDefault();
-
-            if (handler == null) throw new Exception($"No response handler defined for type {typeof(IResponseHandlerAsync<TResult>)}");
-
-            var response = await handler.Handle(context);
-
-            if (response == null) return default(TResult);
-
-            var filters = _serviceProvider.GetServices<IResponseFilterAsync<TResult>>()
-                                ?.Where(h => h.IsApplicable(context))
-                                ?? Enumerable.Empty<IResponseFilterAsync<TResult>>();
-
-            if (filters == null)
-            {
-                foreach (var filter in filters)
-                {
-                    await filter.Filter(context, response);
-                }
-            }
-
-            return response.Result;
+            return await ResponseProviderBus.GetAsync<TResult>(_serviceProvider, context, _logger, failSafe: false);
         }
 
         public async Task<IResponse<TResult>> GetAsync<TRequest, TResult>(TRequest request)

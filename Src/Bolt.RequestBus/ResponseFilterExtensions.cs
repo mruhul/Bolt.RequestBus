@@ -11,6 +11,8 @@ namespace Bolt.RequestBus
     {
         internal static async Task FilterAsync<TResult>(this IServiceProvider service, IExecutionContext context, IResponse<TResult> response, ILogger logger)
         {
+            if (response == null || !response.IsSucceed || response.Result == null) return;
+            
             var filters = service.GetServices<IResponseFilterAsync<TResult>>()
                             ?.Where(h => h.IsApplicable(context));
 
@@ -30,6 +32,8 @@ namespace Bolt.RequestBus
 
         internal static async Task FilterAsync<TRequest,TResult>(this IServiceProvider service, IExecutionContext context, TRequest request, IResponse<TResult> response, ILogger logger)
         {
+            if (response == null || !response.IsSucceed || response.Result == null) return;
+
             var filters = service.GetServices<IResponseFilterAsync<TRequest,TResult>>()
                             ?.Where(h => h.IsApplicable(context,request));
 
