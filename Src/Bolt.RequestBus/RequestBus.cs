@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,8 +11,86 @@ namespace Bolt.RequestBus
     public interface IRequestBus
     {
         Task<IResponse> SendAsync<TRequest>(TRequest request);
+        Task<IResponse> TrySendAsync<TRequest>(TRequest request);
         Task<IResponse<TResult>> SendAsync<TRequest,TResult>(TRequest request);
-        Task PublishAsync<TRequest>(TRequest request);
+        Task<IResponse<TResult>> TrySendAsync<TRequest, TResult>(TRequest request);
+        Task PublishAsync<TEvent>(TEvent evnt);
+        Task TryPublishAsync<TEvent>(TEvent evnt);
+        Task PublishAsync<TEvent>(IExecutionContext context, TEvent evnt);
+        Task TryPublishAsync<TEvent>(IExecutionContext context, TEvent evnt);
+    }
+
+    public class RequestBusSettings
+    {
+        public bool EnableProfiler { get; set; }
+    }
+
+    public class RequestBus : IRequestBus
+    {
+        private readonly IServiceProvider _serviceProvider;
+        private readonly ILogger<RequestBus> _logger;
+
+        public RequestBus(IServiceProvider serviceProvider, ILogger<RequestBus> logger)
+        {
+            _serviceProvider = serviceProvider;
+            _logger = logger;
+        }
+
+        public Task PublishAsync<TEvent>(TEvent evnt)
+        {
+            return _serviceProvider
+                    .BuildContextAsync()
+                    .ContinueWith(x => EventHandlerBus
+                                        .PublishAsync(_serviceProvider, x.Result, _logger, evnt, false));
+        }
+
+        public Task TryPublishAsync<TEvent>(TEvent evnt)
+        {
+            return _serviceProvider
+                    .BuildContextAsync()
+                    .ContinueWith(x => EventHandlerBus
+                                        .PublishAsync(_serviceProvider, x.Result, _logger, evnt, failSafe: true));
+        }
+
+
+
+        public Task PublishAsync<TEvent>(IExecutionContext context, TEvent evnt)
+        {
+            return EventHandlerBus.PublishAsync(_serviceProvider, context, _logger, evnt, failSafe: false);
+        }
+
+        public Task TryPublishAsync<TEvent>(IExecutionContext context, TEvent evnt)
+        {
+            return EventHandlerBus.PublishAsync(_serviceProvider, context, _logger, evnt, failSafe: true);
+        }
+
+        public async Task<IResponse> SendAsync<TRequest>(TRequest request)
+        {
+            var context = await _serviceProvider.BuildContextAsync();
+
+            return await RequestHandlerBus.SendAsync(_serviceProvider, context, _logger, request, failSafe: false);
+        }
+
+        public async Task<IResponse<TResult>> SendAsync<TRequest, TResult>(TRequest request)
+        {
+            var context = await _serviceProvider.BuildContextAsync();
+
+            return await RequestHandlerBus.SendAsync<TRequest,TResult>(_serviceProvider, context, _logger, request, failSafe: false);
+        }
+
+        public async Task<IResponse> TrySendAsync<TRequest>(TRequest request)
+        {
+            var context = await _serviceProvider.BuildContextAsync();
+
+            return await RequestHandlerBus.SendAsync(_serviceProvider, context, _logger, request, failSafe: true);
+        }
+
+        public async Task<IResponse<TResult>> TrySendAsync<TRequest, TResult>(TRequest request)
+        {
+            var context = await _serviceProvider.BuildContextAsync();
+
+            return await RequestHandlerBus.SendAsync<TRequest, TResult>(_serviceProvider, context, _logger, request, failSafe: true);
+        }
     }
 
     public interface IResponse
@@ -29,10 +111,18 @@ namespace Bolt.RequestBus
 
         public static IResponse Succeed() => new Response { IsSucceed = true };
         public static IResponse Failed() => new Response { IsSucceed = false };
+        public static IResponse Failed(IEnumerable<IError> errors) => new Response { IsSucceed = false, Errors = errors };
 
         public static IResponse<TResult> Succeed<TResult>(TResult result) => new Response<TResult> { IsSucceed = true, Result = result };
         public static IResponse<TResult> Failed<TResult>(IEnumerable<IError> errors) => new Response<TResult> { IsSucceed = false, Errors = errors ?? Enumerable.Empty<IError>() };
         public static IResponse<TResult> Failed<TResult>() => new Response<TResult> { IsSucceed = false, Errors = Enumerable.Empty<IError>() };
+
+        internal static IResponse<TResult> NoHandler<TResult>() => new Response<TResult>() { IsSucceed = false, Errors = new IError[] { Error.Create(string.Empty, "Unable to handle request", "NO_HANDLER") } };
+        internal static IResponse NoHandler() => new Response()
+        {
+            IsSucceed = false,
+            Errors = new IError[] { Error.Create(string.Empty, "Unable to handle request", "NO_HANDLER") }
+        };
     }
 
     public class Response<T> : IResponse<T>

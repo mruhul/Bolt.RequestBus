@@ -44,25 +44,7 @@ namespace Bolt.RequestBus
             return (T)(source.Get(key));
         }
 
-        internal static async Task<IEnumerable<IError>> ValidateAsync<TRequest>(this IServiceProvider serviceProvider, IExecutionContext context, TRequest request)
-        {
-            var validators = serviceProvider.GetServices<IValidatorAsync<TRequest>>()
-                                ?.Where(s => s.IsApplicable(context, request))
-                                ?? Enumerable.Empty<IValidatorAsync<TRequest>>();
-
-            foreach(var val in validators)
-            {
-                var errors = await val.Validate(context, request);
-
-                if(errors != null && errors.Any())
-                {
-                    return errors;
-                }
-            }
-
-            return Enumerable.Empty<IError>();
-        }
-
+        
         internal static async Task<IExecutionContext> BuildContextAsync(this IServiceProvider serviceProvider)
         {
             var provider = serviceProvider.GetServices<IExecutionContextInitializerAsync>();

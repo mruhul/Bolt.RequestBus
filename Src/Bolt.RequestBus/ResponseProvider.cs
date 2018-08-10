@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,10 +19,12 @@ namespace Bolt.RequestBus
     public class ResponseProvider : IResponseProvider
     {
         private readonly IServiceProvider _serviceProvider;
+        private readonly ILogger<ResponseProvider> _logger;
 
-        public ResponseProvider(IServiceProvider serviceProvider)
+        public ResponseProvider(IServiceProvider serviceProvider, ILogger<ResponseProvider> logger)
         {
             _serviceProvider = serviceProvider;
+            _logger = logger;
         }
 
         public async Task<IEnumerable<IResponseUnit<TResult>>> GetAllAsync<TResult>()
@@ -90,7 +93,7 @@ namespace Bolt.RequestBus
         {
             var context = await _serviceProvider.BuildContextAsync();
 
-            var errors = await _serviceProvider.ValidateAsync(context, request);
+            var errors = await _serviceProvider.ValidateAsync(context, request, _logger);
 
             var result = new List<IResponseUnit<TResult>>();
 
@@ -193,7 +196,7 @@ namespace Bolt.RequestBus
         {
             var context = await _serviceProvider.BuildContextAsync();
 
-            var errors = await _serviceProvider.ValidateAsync(context, request);
+            var errors = await _serviceProvider.ValidateAsync(context, request, _logger);
 
             if (errors.Any())
             {

@@ -10,6 +10,19 @@ namespace Bolt.RequestBus
         string Message { get; }
     }
 
+    public class Error : IError
+    {
+        public string PropertyName { get; set; }
+
+        public string Code { get; set; }
+
+        public string Message { get; set; }
+
+        public static IError Create(string message) => new Error { Message = message };
+        public static IError Create(string propertyName, string message) => new Error { Message = message, PropertyName = propertyName };
+        public static IError Create(string propertyName, string message, string code) => new Error { Message = message, PropertyName = propertyName, Code = code };
+    }
+
     public interface IValidatorAsync<TRequest> : IApplicable<TRequest>
     {
         Task<IEnumerable<IError>> Validate(IExecutionContext context, TRequest request);
