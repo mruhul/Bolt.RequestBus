@@ -11,6 +11,7 @@ namespace Bolt.RequestBus
     public interface IResponseProvider
     {
         Task<TResult> GetAsync<TResult>();
+        Task<TResult> TryGetAsync<TResult>();
         Task<IResponse<TResult>> GetAsync<TRequest, TResult>(TRequest request);
         Task<IEnumerable<IResponseUnit<TResult>>> GetAllAsync<TResult>();
         Task<IEnumerable<IResponseUnit<TResult>>> GetAllAsync<TRequest, TResult>(TRequest request);
@@ -47,13 +48,19 @@ namespace Bolt.RequestBus
             return await ResponseProviderBus.GetAsync<TResult>(_serviceProvider, context, _logger, failSafe: false);
         }
 
+        public async Task<TResult> TryGetAsync<TResult>()
+        {
+            var context = await _serviceProvider.BuildContextAsync();
+
+            return await ResponseProviderBus.GetAsync<TResult>(_serviceProvider, context, _logger, failSafe: true);
+        }
+
         public async Task<IResponse<TResult>> GetAsync<TRequest, TResult>(TRequest request)
         {
             var context = await _serviceProvider.BuildContextAsync();
 
             return await ResponseProviderBus.GetAsync<TRequest, TResult>(_serviceProvider, context, _logger, request, failSafe: false);
         }
-
 
         private ResponseUnit<TResult> Convert<TResult>(IResponse<TResult> source, ExecutionHintType hintType)
         {

@@ -4,26 +4,17 @@ using Microsoft.Extensions.Logging;
 
 namespace Bolt.RequestBus.Tests
 {
-    public class ServiceProviderFixture : IDisposable
-    {
-        private IServiceCollection _sc;
-
-        public ServiceProviderFixture()
-        {
-            _sc = new ServiceCollection();
-            _sc.AddRequestBus();
-            _sc.AddLogging(configure => configure.AddConsole());
-        }
-
+    public class ServiceProviderFixture
+    {        
         public IServiceProvider BuildProvider(Action<IServiceCollection> action)
         {
-            action.Invoke(_sc);
+            var sc = new ServiceCollection();
+            sc.AddRequestBus();
+            sc.AddLogging(configure => configure.AddConsole());
 
-            return _sc.BuildServiceProvider();
-        }
+            action.Invoke(sc);
 
-        public void Dispose()
-        {
+            return sc.BuildServiceProvider();
         }
     }
 }

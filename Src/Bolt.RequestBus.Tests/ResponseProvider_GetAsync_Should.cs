@@ -7,37 +7,103 @@ using Shouldly;
 
 namespace Bolt.RequestBus.Tests
 {
-
     public class ResponseProvider_GetAsync_Should : IClassFixture<ServiceProviderFixture>
     {
         private readonly ServiceProviderFixture _fixture;
 
-        private IServiceProvider _serviceProvider;
-
         public ResponseProvider_GetAsync_Should(ServiceProviderFixture fixture)
         {
-            _fixture = fixture;
+            _fixture = fixture;   
+        }
 
-            _serviceProvider = _fixture.BuildProvider(collection => {
+        [Fact]
+        public async Task Return_Correct_Response()
+        {
+            var sp = _fixture.BuildProvider(collection => {
+                collection.AddTransient<IExecutionContextInitializerAsync, Customer1ExecutionContext>();
                 collection.AddTransient<IResponseFilterAsync<Customer>, CustomerFilter>();
                 collection.AddTransient<IResponseHandlerAsync<Customer>, GetCustomerHandler>();
                 collection.AddTransient<IResponseHandlerAsync<Customer>, GetCustomer2Handler>();
             });
-        }
 
-        
-        [Fact]
-        public async Task Return_Correct_Response()
-        {
-            var response = _serviceProvider.GetService<IResponseProvider>();
+            var response = sp.GetService<IResponseProvider>();
             var result = await response.GetAsync<Customer>();
             result.Name.ShouldBe("Customer1Filtered");
+        }
+
+        [Fact]
+        public async Task Return_Pick_Correct_Handler()
+        {
+            var sp = _fixture.BuildProvider(collection => {
+                collection.AddTransient<IExecutionContextInitializerAsync, Customer2ExecutionContext>();
+                collection.AddTransient<IResponseFilterAsync<Customer>, CustomerFilter>();
+                collection.AddTransient<IResponseHandlerAsync<Customer>, GetCustomerHandler>();
+                collection.AddTransient<IResponseHandlerAsync<Customer>, GetCustomer2Handler>();
+            });
+
+            var response = sp.GetService<IResponseProvider>();
+            var result = await response.GetAsync<Customer>();
+            result.Name.ShouldBe("Customer2Filtered");
+        }
+
+        [Fact]
+        public async Task Throw_Exception_When_No_Handler_Available()
+        {
+            var sp = _fixture.BuildProvider(collection => {
+                collection.AddTransient<IExecutionContextInitializerAsync, CustomerNoneExecutionContext>();
+                collection.AddTransient<IResponseFilterAsync<Customer>, CustomerFilter>();
+                collection.AddTransient<IResponseHandlerAsync<Customer>, GetCustomerHandler>();
+                collection.AddTransient<IResponseHandlerAsync<Customer>, GetCustomer2Handler>();
+            });
+
+            var response = sp.GetService<IResponseProvider>();
+            await Should.ThrowAsync<RequestBusException>(response.GetAsync<Customer>());
+        }
+
+        [Fact]
+        public async Task Not_Throw_Exception_When_No_Handler_Available()
+        {
+            var sp = _fixture.BuildProvider(collection => {
+                collection.AddTransient<IExecutionContextInitializerAsync, CustomerNoneExecutionContext>();
+                collection.AddTransient<IResponseFilterAsync<Customer>, CustomerFilter>();
+                collection.AddTransient<IResponseHandlerAsync<Customer>, GetCustomerHandler>();
+                collection.AddTransient<IResponseHandlerAsync<Customer>, GetCustomer2Handler>();
+            });
+
+            var response = sp.GetService<IResponseProvider>();
+            var rslt = await response.TryGetAsync<Customer>();
+            rslt.ShouldBeNull();
         }
     }
 
     public class Customer
     {
         public string Name { get; set; }
+    }
+    public class CustomerNoneExecutionContext : IExecutionContextInitializerAsync
+    {
+        public Task Init(IExecutionContextWriter writer)
+        {
+            writer.Write("handler", "");
+            return Task.CompletedTask;
+        }
+    }
+
+    public class Customer1ExecutionContext : IExecutionContextInitializerAsync
+    {
+        public Task Init(IExecutionContextWriter writer)
+        {
+            writer.Write("handler", "customer1");
+            return Task.CompletedTask;
+        }
+    }
+    public class Customer2ExecutionContext : IExecutionContextInitializerAsync
+    {
+        public Task Init(IExecutionContextWriter writer)
+        {
+            writer.Write("handler", "customer2");
+            return Task.CompletedTask;
+        }
     }
 
     public class CustomerFilter : ResponseFilterAsync<Customer>
@@ -62,7 +128,7 @@ namespace Bolt.RequestBus.Tests
 
         public override bool IsApplicable(IExecutionContext context)
         {
-            return true;
+            return context.Get<string>("handler").IsSame("customer1");
         }
     }
 
@@ -74,7 +140,7 @@ namespace Bolt.RequestBus.Tests
         }
         public override bool IsApplicable(IExecutionContext context)
         {
-            return false ;
+            return context.Get<string>("handler").IsSame("customer2");
         }
     }
 }
