@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Bolt.Common.Extensions;
@@ -11,29 +12,78 @@ namespace Bolt.RequestBus.Tests
 {
     public class ResponseProviver_Responses_With_Request_Should
     {
-        [Fact]
-        public async Task Return_All_Responses()
+        private Task<IEnumerable<IResponseUnit<TestResponse>>> ExecuteResponses(string contextValue, TestRequest request)
         {
             var sp = ServiceProviderBuilder.Build(sc => {
+                sc.AddTransient<IExecutionContextInitializerAsync>(c => new TestRequestExecutionContext(contextValue));
+                sc.AddTransient<IValidatorAsync<TestRequest>, TestRequestValidator>();
                 sc.AddTransient<IResponseHandlerAsync<TestRequest, TestResponse>, TestRequestMainHandler>();
+                sc.AddTransient<IResponseHandlerAsync<TestRequest, TestResponse>, TestRequestFailedMainHandler>();
                 sc.AddTransient<IResponseHandlerAsync<TestRequest, TestResponse>, TestRequestInDependentHandler>();
                 sc.AddTransient<IResponseHandlerAsync<TestRequest, TestResponse>, TestRequestDependentHandler>();
             });
 
+
             var sut = sp.GetService<IResponseProvider>();
 
-            var response = await sut.ResponsesAsync<TestRequest, TestResponse>(new TestRequest {
+            return sut.ResponsesAsync<TestRequest, TestResponse>(request);
+        }
+
+        [Fact]
+        public async Task Return_Only_IndependentAndMain_Response_When_Main_Failed()
+        {
+            var responses = await ExecuteResponses("MainFailed", new TestRequest { Id = "1" });
+
+            responses.Count().ShouldBe(2);
+            responses.ShouldContain(x => x.IsMainResponse);
+            responses.ShouldContain(x => x.Result != null && x.Result.Name.IsSame("Independent"));
+        }
+
+        [Fact]
+        public async Task Return_MainResponse_As_Failed_With_Errors_When_Validation_Failed()
+        {   
+            var responses = await ExecuteResponses("ValidationFailed", new TestRequest
+            {
+                Id = string.Empty
+            });
+
+            responses.ShouldNotContain(x => !x.IsMainResponse);
+            responses.ShouldContain(x => x.IsMainResponse);
+            responses.ShouldContain(x => x.Errors.Any(e => e.Message.IsSame("Id is required")));
+        }
+
+        [Fact]
+        public async Task Return_All_Responses()
+        {
+            var responses = await ExecuteResponses("A", new TestRequest
+            {
                 Id = "1"
             });
 
-            response.ShouldNotBeNull();
-            response.ShouldContain(x => x.IsMainResponse);
-            response.ShouldContain(x => !x.IsMainResponse);
-            response.ShouldContain(x => x.Result.Name.IsSame("Main"));
-            response.ShouldContain(x => x.Result.Name.IsSame("Independent"));
-            response.ShouldContain(x => x.Result.Name.IsSame("Dependent"));
+            responses.ShouldNotBeNull();
+            responses.ShouldContain(x => x.IsMainResponse);
+            responses.ShouldContain(x => !x.IsMainResponse);
+            responses.ShouldContain(x => x.Result.Name.IsSame("Main"));
+            responses.ShouldContain(x => x.Result.Name.IsSame("Independent"));
+            responses.ShouldContain(x => x.Result.Name.IsSame("Dependent"));
         }
 
+
+        public class TestRequestValidator : ValidatorAsync<TestRequest>
+        {
+            public override Task<IEnumerable<IError>> Validate(IExecutionContext context, TestRequest request)
+            {
+                return RuleChecker.For(request)
+                        .Should(x => x.Id.HasValue(),"Id","Id is required")
+                        .Done()
+                        .WrapInTask();
+            }
+
+            public override bool IsApplicable(IExecutionContext context, TestRequest request)
+            {
+                return context.Get<string>("control").IsSame("ValidationFailed");
+            }
+        }
 
         public class TestRequestMainHandler : MainResponseHandlerAsync<TestRequest, TestResponse>
         {
@@ -43,6 +93,27 @@ namespace Bolt.RequestBus.Tests
                 {
                     Name = "Main"
                 }.WrapInTask();
+            }
+
+            public override bool IsApplicable(IExecutionContext context, TestRequest request)
+            {
+                var control = context.Get<string>("control");
+                return control.IsSame("a");
+            }
+        }
+
+        public class TestRequestFailedMainHandler : IResponseHandlerAsync<TestRequest, TestResponse>
+        {
+            public ExecutionHintType ExecutionHint => ExecutionHintType.Main;
+
+            public Task<IResponse<TestResponse>> Handle(IExecutionContext context, TestRequest request)
+            {
+                return Response.Failed<TestResponse>().WrapInTask();
+            }
+
+            public bool IsApplicable(IExecutionContext context, TestRequest request)
+            {
+                return context.Get<string>("control").IsSame("mainfailed");
             }
         }
 
@@ -54,6 +125,12 @@ namespace Bolt.RequestBus.Tests
                 {
                     Name = "Independent"
                 }.WrapInTask();
+            }
+
+            public override bool IsApplicable(IExecutionContext context, TestRequest request)
+            {
+                var control = context.Get<string>("control");
+                return control.IsSame("a") || control.IsSame("mainfailed");
             }
         }
 
@@ -67,6 +144,46 @@ namespace Bolt.RequestBus.Tests
                 {
                     Name = "Dependent"
                 }.WrapInTask();
+            }
+
+            public override bool IsApplicable(IExecutionContext context, TestRequest request)
+            {
+                var control = context.Get<string>("control");
+                return control.IsSame("a") || control.IsSame("mainfailed");
+            }
+        }
+
+        public class TestRequestDependentBHandler : ResponseHandlerAsync<TestRequest, TestResponse>
+        {
+            public override ExecutionHintType ExecutionHint => ExecutionHintType.Dependent;
+
+            protected override Task<TestResponse> Handle(IExecutionContext context, TestRequest request)
+            {
+                return new TestResponse
+                {
+                    Name = "Dependent"
+                }.WrapInTask();
+            }
+
+            public override bool IsApplicable(IExecutionContext context, TestRequest request)
+            {
+                return context.Get<string>("control").IsSame("a");
+            }
+        }
+
+        public class TestRequestExecutionContext : IExecutionContextInitializerAsync
+        {
+            private readonly string _value;
+
+            public TestRequestExecutionContext(string value)
+            {
+                _value = value;
+            }
+
+            public Task Init(IExecutionContextWriter writer)
+            {
+                writer.Write("control", _value);
+                return Task.CompletedTask;
             }
         }
 
