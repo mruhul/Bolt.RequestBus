@@ -9,46 +9,6 @@ namespace Bolt.RequestBus
 {
     public static class ResponseProviderBus
     {
-        public static async Task<IResponse<TResult>> GetAsync<TRequest, TResult>(IServiceProvider sp, IExecutionContext context, ILogger logger, TRequest request, bool failSafe)
-        {
-            var errors = await sp.ValidateAsync(context, request, logger);
-
-            if (errors.Any())
-            {
-                return Response.Failed<TResult>(errors);
-            }
-
-            var handler = sp.GetServices<IResponseHandlerAsync<TRequest, TResult>>()
-                            ?.Where(h => h.IsApplicable(context, request)).FirstOrDefault();
-
-            if (handler == null)
-            {
-                if (failSafe)
-                {
-                    logger.LogWarning($"No handler found that impement IResponseProvider<{typeof(TRequest).FullName},{typeof(TResult).FullName}>");
-
-                    return Response.NoHandler<TResult>();
-                }
-
-                throw new Exception($"No response handler defined for type {typeof(IResponseHandlerAsync<TRequest, TResult>)}");
-            };
-
-
-#if DEBUG
-            var timer = Timer.Start(logger, handler);
-#endif
-            var response = await handler.Handle(context, request);
-#if DEBUG
-            timer.Completed();
-#endif
-
-            if (response == null) return Response.Failed<TResult>();
-
-            await sp.FilterAsync(context, response, logger);
-
-            return response;
-        }
-
         public static async Task<TResult> GetAsync<TResult>(IServiceProvider sp, IExecutionContext context, ILogger logger, bool failSafe)
         {
             var handler = sp.GetServices<IResponseHandlerAsync<TResult>>()

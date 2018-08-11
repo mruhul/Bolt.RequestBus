@@ -20,7 +20,7 @@ namespace Bolt.RequestBus.Tests
             });
 
             var response = sp.GetService<IResponseProvider>();
-            var result = await response.GetAsync<Customer>();
+            var result = await response.ResponseAsync<Customer>();
             result.Name.ShouldBe("Customer1Filtered");
         }
 
@@ -35,7 +35,7 @@ namespace Bolt.RequestBus.Tests
             });
 
             var response = sp.GetService<IResponseProvider>();
-            var result = await response.GetAsync<Customer>();
+            var result = await response.ResponseAsync<Customer>();
             result.Name.ShouldBe("Customer2Filtered");
         }
 
@@ -50,7 +50,7 @@ namespace Bolt.RequestBus.Tests
             });
 
             var response = sp.GetService<IResponseProvider>();
-            await Should.ThrowAsync<RequestBusException>(response.GetAsync<Customer>());
+            await Should.ThrowAsync<RequestBusException>(response.ResponseAsync<Customer>());
         }
     }
 

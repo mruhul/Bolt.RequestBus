@@ -20,7 +20,7 @@ namespace Bolt.RequestBus.Tests
             });
 
             var response = sp.GetService<IResponseProvider>();
-            var rslt = await response.TryGetAsync<Customer>();
+            var rslt = await response.TryResponseAsync<Customer>();
             rslt.ShouldBeNull();
         }
     }
