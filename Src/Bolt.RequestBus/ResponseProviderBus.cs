@@ -82,7 +82,7 @@ namespace Bolt.RequestBus
 
                 if (task.Result.IsMainResponse)
                 {
-                    isMainFailed = task.Result.IsSucceed;
+                    isMainFailed = !task.Result.IsSucceed;
                 }
 
                 result.Add(task.Result);
@@ -146,7 +146,7 @@ namespace Bolt.RequestBus
 
                 if (task.Result.IsMainResponse)
                 {
-                    isMainFailed = task.Result.IsSucceed;
+                    isMainFailed = !task.Result.IsSucceed;
                 }
 
                 result.Add(task.Result);
