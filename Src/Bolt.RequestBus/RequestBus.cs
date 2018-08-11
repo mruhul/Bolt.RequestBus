@@ -93,6 +93,14 @@ namespace Bolt.RequestBus
         }
     }
 
+    public static class ResponseExtensions
+    {
+        public static bool IsNoHandlerAvailable(this IResponse source)
+        {
+            return source.IsSucceed == false && source.Errors.Any(x => x.Code == "NO_HANDLER");
+        }
+    }
+
     public interface IResponse
     {
         bool IsSucceed { get; }
