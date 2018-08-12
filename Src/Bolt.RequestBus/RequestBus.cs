@@ -16,8 +16,8 @@ namespace Bolt.RequestBus
         Task<IResponse<TResult>> TrySendAsync<TRequest, TResult>(TRequest request);
         Task PublishAsync<TEvent>(TEvent evnt);
         Task TryPublishAsync<TEvent>(TEvent evnt);
-        Task PublishAsync<TEvent>(IExecutionContext context, TEvent evnt);
-        Task TryPublishAsync<TEvent>(IExecutionContext context, TEvent evnt);
+        Task PublishAsync<TEvent>(IExecutionContextReader context, TEvent evnt);
+        Task TryPublishAsync<TEvent>(IExecutionContextReader context, TEvent evnt);
     }
 
     public class RequestBusSettings
@@ -54,12 +54,12 @@ namespace Bolt.RequestBus
 
 
 
-        public Task PublishAsync<TEvent>(IExecutionContext context, TEvent evnt)
+        public Task PublishAsync<TEvent>(IExecutionContextReader context, TEvent evnt)
         {
             return EventHandlerBus.PublishAsync(_serviceProvider, context, _logger, evnt, failSafe: false);
         }
 
-        public Task TryPublishAsync<TEvent>(IExecutionContext context, TEvent evnt)
+        public Task TryPublishAsync<TEvent>(IExecutionContextReader context, TEvent evnt)
         {
             return EventHandlerBus.PublishAsync(_serviceProvider, context, _logger, evnt, failSafe: true);
         }

@@ -71,7 +71,7 @@ namespace Bolt.RequestBus.Tests
 
         public class TestRequestValidator : ValidatorAsync<TestRequest>
         {
-            public override Task<IEnumerable<IError>> Validate(IExecutionContext context, TestRequest request)
+            public override Task<IEnumerable<IError>> Validate(IExecutionContextReader context, TestRequest request)
             {
                 return RuleChecker.For(request)
                         .Should(x => x.Id.HasValue(),"Id","Id is required")
@@ -79,7 +79,7 @@ namespace Bolt.RequestBus.Tests
                         .WrapInTask();
             }
 
-            public override bool IsApplicable(IExecutionContext context, TestRequest request)
+            public override bool IsApplicable(IExecutionContextReader context, TestRequest request)
             {
                 return context.Get<string>("control").IsSame("ValidationFailed");
             }
@@ -87,7 +87,7 @@ namespace Bolt.RequestBus.Tests
 
         public class TestRequestMainHandler : MainResponseHandlerAsync<TestRequest, TestResponse>
         {
-            protected override Task<TestResponse> Handle(IExecutionContext context, TestRequest request)
+            protected override Task<TestResponse> Handle(IExecutionContextReader context, TestRequest request)
             {
                 return new TestResponse
                 {
@@ -95,7 +95,7 @@ namespace Bolt.RequestBus.Tests
                 }.WrapInTask();
             }
 
-            public override bool IsApplicable(IExecutionContext context, TestRequest request)
+            public override bool IsApplicable(IExecutionContextReader context, TestRequest request)
             {
                 var control = context.Get<string>("control");
                 return control.IsSame("a");
@@ -106,12 +106,12 @@ namespace Bolt.RequestBus.Tests
         {
             public ExecutionHintType ExecutionHint => ExecutionHintType.Main;
 
-            public Task<IResponse<TestResponse>> Handle(IExecutionContext context, TestRequest request)
+            public Task<IResponse<TestResponse>> Handle(IExecutionContextReader context, TestRequest request)
             {
                 return Response.Failed<TestResponse>().WrapInTask();
             }
 
-            public bool IsApplicable(IExecutionContext context, TestRequest request)
+            public bool IsApplicable(IExecutionContextReader context, TestRequest request)
             {
                 return context.Get<string>("control").IsSame("mainfailed");
             }
@@ -119,7 +119,7 @@ namespace Bolt.RequestBus.Tests
 
         public class TestRequestInDependentHandler : ResponseHandlerAsync<TestRequest, TestResponse>
         {
-            protected override Task<TestResponse> Handle(IExecutionContext context, TestRequest request)
+            protected override Task<TestResponse> Handle(IExecutionContextReader context, TestRequest request)
             {
                 return new TestResponse
                 {
@@ -127,7 +127,7 @@ namespace Bolt.RequestBus.Tests
                 }.WrapInTask();
             }
 
-            public override bool IsApplicable(IExecutionContext context, TestRequest request)
+            public override bool IsApplicable(IExecutionContextReader context, TestRequest request)
             {
                 var control = context.Get<string>("control");
                 return control.IsSame("a") || control.IsSame("mainfailed");
@@ -138,7 +138,7 @@ namespace Bolt.RequestBus.Tests
         {
             public override ExecutionHintType ExecutionHint => ExecutionHintType.Dependent;
             
-            protected override Task<TestResponse> Handle(IExecutionContext context, TestRequest request)
+            protected override Task<TestResponse> Handle(IExecutionContextReader context, TestRequest request)
             {
                 return new TestResponse
                 {
@@ -146,7 +146,7 @@ namespace Bolt.RequestBus.Tests
                 }.WrapInTask();
             }
 
-            public override bool IsApplicable(IExecutionContext context, TestRequest request)
+            public override bool IsApplicable(IExecutionContextReader context, TestRequest request)
             {
                 var control = context.Get<string>("control");
                 return control.IsSame("a") || control.IsSame("mainfailed");
@@ -157,7 +157,7 @@ namespace Bolt.RequestBus.Tests
         {
             public override ExecutionHintType ExecutionHint => ExecutionHintType.Dependent;
 
-            protected override Task<TestResponse> Handle(IExecutionContext context, TestRequest request)
+            protected override Task<TestResponse> Handle(IExecutionContextReader context, TestRequest request)
             {
                 return new TestResponse
                 {
@@ -165,7 +165,7 @@ namespace Bolt.RequestBus.Tests
                 }.WrapInTask();
             }
 
-            public override bool IsApplicable(IExecutionContext context, TestRequest request)
+            public override bool IsApplicable(IExecutionContextReader context, TestRequest request)
             {
                 return context.Get<string>("control").IsSame("a");
             }

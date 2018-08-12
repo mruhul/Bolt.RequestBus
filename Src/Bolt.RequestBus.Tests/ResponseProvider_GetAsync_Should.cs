@@ -86,7 +86,7 @@ namespace Bolt.RequestBus.Tests
 
     public class CustomerFilter : ResponseFilterAsync<Customer>
     {
-        public override Task Filter(IExecutionContext context, IResponse<Customer> response)
+        public override Task Filter(IExecutionContextReader context, IResponse<Customer> response)
         {
             if(response.IsSucceed)
             {
@@ -99,12 +99,12 @@ namespace Bolt.RequestBus.Tests
 
     public class GetCustomerHandler : ResponseHandlerAsync<Customer>
     {
-        protected override Task<Customer> Handle(IExecutionContext context)
+        protected override Task<Customer> Handle(IExecutionContextReader context)
         {
             return new Customer { Name = "Customer1" }.WrapInTask();
         }
 
-        public override bool IsApplicable(IExecutionContext context)
+        public override bool IsApplicable(IExecutionContextReader context)
         {
             return context.Get<string>("handler").IsSame("customer1");
         }
@@ -112,11 +112,11 @@ namespace Bolt.RequestBus.Tests
 
     public class GetCustomer2Handler : ResponseHandlerAsync<Customer>
     {
-        protected override Task<Customer> Handle(IExecutionContext context)
+        protected override Task<Customer> Handle(IExecutionContextReader context)
         {
             return new Customer { Name = "Customer2" }.WrapInTask();
         }
-        public override bool IsApplicable(IExecutionContext context)
+        public override bool IsApplicable(IExecutionContextReader context)
         {
             return context.Get<string>("handler").IsSame("customer2");
         }

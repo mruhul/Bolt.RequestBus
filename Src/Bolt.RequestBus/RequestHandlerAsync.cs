@@ -9,34 +9,34 @@ namespace Bolt.RequestBus
 {
     public interface IRequestHandlerAsync<TRequest> : IApplicable<TRequest>
     {
-        Task<IResponse> Handle(IExecutionContext context, TRequest request);
+        Task<IResponse> Handle(IExecutionContextReader context, TRequest request);
     }
 
     public abstract class RequestHandlerAsync<TRequest> : IRequestHandlerAsync<TRequest>
     {
-        Task<IResponse> IRequestHandlerAsync<TRequest>.Handle(IExecutionContext context, TRequest request)
+        Task<IResponse> IRequestHandlerAsync<TRequest>.Handle(IExecutionContextReader context, TRequest request)
         {
             return Handle(context, request)
                 .ContinueWith(t => Response.Succeed());
         }
 
-        protected abstract Task Handle(IExecutionContext context, TRequest request);
+        protected abstract Task Handle(IExecutionContextReader context, TRequest request);
 
-        public virtual bool IsApplicable(IExecutionContext context, TRequest request) => true;
+        public virtual bool IsApplicable(IExecutionContextReader context, TRequest request) => true;
     }
 
     public interface IRequestHandlerAsync<TRequest,TResult> : IApplicable<TRequest>
     {
-        Task<IResponse<TResult>> Handle(IExecutionContext context, TRequest request);
+        Task<IResponse<TResult>> Handle(IExecutionContextReader context, TRequest request);
     }
 
     public abstract class RequestHandlerAsync<TRequest, TResult> : IRequestHandlerAsync<TRequest, TResult>
     {
-        protected abstract Task<TResult> Handle(IExecutionContext context, TRequest request);
+        protected abstract Task<TResult> Handle(IExecutionContextReader context, TRequest request);
 
-        public virtual bool IsApplicable(IExecutionContext context, TRequest request) => true;
+        public virtual bool IsApplicable(IExecutionContextReader context, TRequest request) => true;
 
-        Task<IResponse<TResult>> IRequestHandlerAsync<TRequest, TResult>.Handle(IExecutionContext context, TRequest request)
+        Task<IResponse<TResult>> IRequestHandlerAsync<TRequest, TResult>.Handle(IExecutionContextReader context, TRequest request)
         {
             return Handle(context, request)
                 .ContinueWith(t => Response.Succeed(t.Result));
@@ -46,7 +46,7 @@ namespace Bolt.RequestBus
 
     internal class RequestHandlerBus
     {
-        internal static async Task<IResponse> SendAsync<TRequest>(IServiceProvider serviceProvider, IExecutionContext context, ILogger logger, TRequest request, bool failSafe)
+        internal static async Task<IResponse> SendAsync<TRequest>(IServiceProvider serviceProvider, IExecutionContextReader context, ILogger logger, TRequest request, bool failSafe)
         {
             var errors = await serviceProvider.ValidateAsync(context, request, logger);
 
@@ -75,7 +75,7 @@ namespace Bolt.RequestBus
             return result;
         }
 
-        internal static async Task<IResponse<TResult>> SendAsync<TRequest,TResult>(IServiceProvider serviceProvider, IExecutionContext context, ILogger logger, TRequest request, bool failSafe)
+        internal static async Task<IResponse<TResult>> SendAsync<TRequest,TResult>(IServiceProvider serviceProvider, IExecutionContextReader context, ILogger logger, TRequest request, bool failSafe)
         {
             var errors = await serviceProvider.ValidateAsync(context, request, logger);
 

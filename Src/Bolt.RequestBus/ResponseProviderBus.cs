@@ -9,7 +9,7 @@ namespace Bolt.RequestBus
 {
     public static class ResponseProviderBus
     {
-        public static async Task<TResult> GetAsync<TResult>(IServiceProvider sp, IExecutionContext context, ILogger logger, bool failSafe)
+        public static async Task<TResult> GetAsync<TResult>(IServiceProvider sp, IExecutionContextReader context, ILogger logger, bool failSafe)
         {
             var handler = sp.GetServices<IResponseHandlerAsync<TResult>>()
                             ?.Where(h => h.IsApplicable(context)).FirstOrDefault();
@@ -44,7 +44,7 @@ namespace Bolt.RequestBus
             return response.Result;
         }
 
-        public static async Task<IEnumerable<IResponseUnit<TResult>>> GetAllAsync<TRequest, TResult>(IServiceProvider sp, IExecutionContext context, ILogger logger, TRequest request)
+        public static async Task<IEnumerable<IResponseUnit<TResult>>> GetAllAsync<TRequest, TResult>(IServiceProvider sp, IExecutionContextReader context, ILogger logger, TRequest request)
         {
             var errors = await sp.ValidateAsync(context, request, logger);
 
@@ -122,7 +122,7 @@ namespace Bolt.RequestBus
             return result;
         }
 
-        public static async Task<IEnumerable<IResponseUnit<TResult>>> GetAllAsync<TResult>(IServiceProvider sp, IExecutionContext context, ILogger logger)
+        public static async Task<IEnumerable<IResponseUnit<TResult>>> GetAllAsync<TResult>(IServiceProvider sp, IExecutionContextReader context, ILogger logger)
         {
             var result = new List<IResponseUnit<TResult>>();
 
@@ -186,7 +186,7 @@ namespace Bolt.RequestBus
             return result;
         }
 
-        private static async Task<IResponseUnit<TResult>> HandleResponseHandler<TResult>(IResponseHandlerAsync<TResult> h, IExecutionContext context, ILogger logger)
+        private static async Task<IResponseUnit<TResult>> HandleResponseHandler<TResult>(IResponseHandlerAsync<TResult> h, IExecutionContextReader context, ILogger logger)
         {
             IResponse<TResult> rsp;
 #if DEBUG
@@ -216,7 +216,7 @@ namespace Bolt.RequestBus
             return Convert(rsp, h.ExecutionHint);
         }
 
-        private static async Task<IResponseUnit<TResult>> HandleResponseHandler<TRequest, TResult>(IExecutionContext context, IResponseHandlerAsync<TRequest, TResult> h, TRequest request, ILogger logger)
+        private static async Task<IResponseUnit<TResult>> HandleResponseHandler<TRequest, TResult>(IExecutionContextReader context, IResponseHandlerAsync<TRequest, TResult> h, TRequest request, ILogger logger)
         {
 
 #if DEBUG

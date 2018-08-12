@@ -25,12 +25,12 @@ namespace Bolt.RequestBus
 
     public interface IValidatorAsync<TRequest> : IApplicable<TRequest>
     {
-        Task<IEnumerable<IError>> Validate(IExecutionContext context, TRequest request);
+        Task<IEnumerable<IError>> Validate(IExecutionContextReader context, TRequest request);
     }
 
     public abstract class ValidatorAsync<TRequest> : IValidatorAsync<TRequest>
     {
-        public abstract Task<IEnumerable<IError>> Validate(IExecutionContext context, TRequest request);
-        public virtual bool IsApplicable(IExecutionContext context, TRequest request) => true;
+        public abstract Task<IEnumerable<IError>> Validate(IExecutionContextReader context, TRequest request);
+        public virtual bool IsApplicable(IExecutionContextReader context, TRequest request) => true;
     }
 }

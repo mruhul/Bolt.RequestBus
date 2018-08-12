@@ -9,7 +9,7 @@ namespace Bolt.RequestBus
 {
     internal static class ValidationExtensions
     {
-        internal static async Task<IEnumerable<IError>> ValidateAsync<TRequest>(this IServiceProvider serviceProvider, IExecutionContext context, TRequest request, ILogger logger)
+        internal static async Task<IEnumerable<IError>> ValidateAsync<TRequest>(this IServiceProvider serviceProvider, IExecutionContextReader context, TRequest request, ILogger logger)
         {
             var validators = serviceProvider.GetServices<IValidatorAsync<TRequest>>()
                                 ?.Where(s => s.IsApplicable(context, request))

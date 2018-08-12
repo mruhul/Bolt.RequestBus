@@ -94,7 +94,7 @@ namespace Bolt.RequestBus.Tests
 
         public class TestQueryInputValidatorFirst : ValidatorAsync<TestQuery>
         {
-            public override Task<IEnumerable<IError>> Validate(IExecutionContext context, TestQuery request)
+            public override Task<IEnumerable<IError>> Validate(IExecutionContextReader context, TestQuery request)
             {
                 return RuleChecker
                         .For(request)
@@ -104,7 +104,7 @@ namespace Bolt.RequestBus.Tests
                         .WrapInTask();
             }
 
-            public override bool IsApplicable(IExecutionContext context, TestQuery request)
+            public override bool IsApplicable(IExecutionContextReader context, TestQuery request)
             {
                 return context.Get<string>("handler").IsSame("first");
             }
@@ -112,7 +112,7 @@ namespace Bolt.RequestBus.Tests
 
         public class TestQueryInputValidatorSecond : ValidatorAsync<TestQuery>
         {
-            public override Task<IEnumerable<IError>> Validate(IExecutionContext context, TestQuery request)
+            public override Task<IEnumerable<IError>> Validate(IExecutionContextReader context, TestQuery request)
             {
                 return RuleChecker
                         .For(request)
@@ -122,7 +122,7 @@ namespace Bolt.RequestBus.Tests
                         .WrapInTask();
             }
 
-            public override bool IsApplicable(IExecutionContext context, TestQuery request)
+            public override bool IsApplicable(IExecutionContextReader context, TestQuery request)
             {
                 return context.Get<string>("handler").IsSame("second");
             }
@@ -130,14 +130,14 @@ namespace Bolt.RequestBus.Tests
 
         public class TestQueryHandlerFirst : RequestHandlerAsync<TestQuery, TestResult>
         {
-            protected override Task<TestResult> Handle(IExecutionContext context, TestQuery request)
+            protected override Task<TestResult> Handle(IExecutionContextReader context, TestQuery request)
             {
                 return new TestResult {
                     Desc = $"{request.Name}FromFirstHandler"
                 }.WrapInTask();
             }
 
-            public override bool IsApplicable(IExecutionContext context, TestQuery request)
+            public override bool IsApplicable(IExecutionContextReader context, TestQuery request)
             {
                 return context.Get<string>("handler").IsSame("first");
             }
@@ -147,7 +147,7 @@ namespace Bolt.RequestBus.Tests
 
         public class TestQueryHandlerSecond : RequestHandlerAsync<TestQuery, TestResult>
         {
-            protected override Task<TestResult> Handle(IExecutionContext context, TestQuery request)
+            protected override Task<TestResult> Handle(IExecutionContextReader context, TestQuery request)
             {
                 return new TestResult
                 {
@@ -155,7 +155,7 @@ namespace Bolt.RequestBus.Tests
                 }.WrapInTask();
             }
 
-            public override bool IsApplicable(IExecutionContext context, TestQuery request)
+            public override bool IsApplicable(IExecutionContextReader context, TestQuery request)
             {
                 return context.Get<string>("handler").IsSame("second");
             }

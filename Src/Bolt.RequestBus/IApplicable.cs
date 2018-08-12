@@ -6,11 +6,11 @@ namespace Bolt.RequestBus
 {
     public interface IApplicable
     {
-        bool IsApplicable(IExecutionContext context);
+        bool IsApplicable(IExecutionContextReader context);
     }
 
     public interface IApplicable<TRequest>
     {
-        bool IsApplicable(IExecutionContext context, TRequest request);
+        bool IsApplicable(IExecutionContextReader context, TRequest request);
     }
 }

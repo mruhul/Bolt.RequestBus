@@ -9,19 +9,19 @@ namespace Bolt.RequestBus
 {
     public interface IEventHandlerAsync<TEvent> : IApplicable<TEvent>
     {
-        Task Handle(IExecutionContext context, TEvent evnt);
+        Task Handle(IExecutionContextReader context, TEvent evnt);
     }
 
     public abstract class EventHandlerAsync<TEvent> : IEventHandlerAsync<TEvent>
     {
-        public abstract Task Handle(IExecutionContext context, TEvent evnt);
+        public abstract Task Handle(IExecutionContextReader context, TEvent evnt);
 
-        public virtual bool IsApplicable(IExecutionContext context, TEvent request) => true;
+        public virtual bool IsApplicable(IExecutionContextReader context, TEvent request) => true;
     }
 
     internal static class EventHandlerBus
     {
-        public static Task PublishAsync<TEvent>(IServiceProvider sp, IExecutionContext context, ILogger logger, TEvent evnt, bool failSafe)
+        public static Task PublishAsync<TEvent>(IServiceProvider sp, IExecutionContextReader context, ILogger logger, TEvent evnt, bool failSafe)
         {
             var handlers = sp.GetServices<IEventHandlerAsync<TEvent>>()
                             ?.Where(h => h.IsApplicable(context, evnt));

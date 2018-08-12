@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace Bolt.RequestBus
 {
-    public interface IExecutionContext
+    public interface IExecutionContextReader
     {
         object Get(string key);
+        bool Exists(string key);
     }
 
     public interface IExecutionContextWriter
@@ -17,18 +18,33 @@ namespace Bolt.RequestBus
         void Write(string key, object value);
     }
 
+    internal interface IExecutionContext : IExecutionContextReader, IExecutionContextWriter
+    {
+    }
+
     public interface IExecutionContextInitializerAsync
     {
         Task Init(IExecutionContextWriter writer);
     }
 
-    public class ExecutionContext : IExecutionContext, IExecutionContextWriter
+    public interface IExecutionContextInitializerAsync<TRequest>
+    {
+        Task Init(IExecutionContextWriter writer, TRequest request);
+        bool IsApplicable(IExecutionContextReader context, TRequest request);
+    }
+
+    public class ExecutionContext : IExecutionContextReader, IExecutionContextWriter
     {
         private readonly ConcurrentDictionary<string, object> _store = new ConcurrentDictionary<string, object>();
 
         public object Get(string key)
         {
             return _store.TryGetValue(key, out object result) ? result : null;
+        }
+
+        public bool Exists(string key)
+        {
+            return _store.TryGetValue(key, out object _);
         }
 
         public void Write(string key, object value)
@@ -39,24 +55,21 @@ namespace Bolt.RequestBus
 
     public static class ExecutionContextExtensions
     {
-        public static T Get<T>(this IExecutionContext source, string key)
+        public static T Get<T>(this IExecutionContextReader source, string key)
         {
             return (T)(source.Get(key));
         }
 
         
-        internal static async Task<IExecutionContext> BuildContextAsync(this IServiceProvider serviceProvider)
+        internal static async Task<IExecutionContextReader> BuildContextAsync(this IServiceProvider serviceProvider)
         {
-            var provider = serviceProvider.GetServices<IExecutionContextInitializerAsync>();
+            var providers = serviceProvider.GetServices<IExecutionContextInitializerAsync>();
 
             var context = new ExecutionContext();
 
-            if(provider != null)
+            if(providers != null)
             {
-                foreach(var p in provider)
-                {
-                    await p.Init(context);
-                }
+                await Task.WhenAll(providers.Select(p => p.Init(context)));
             }
 
             return context;
