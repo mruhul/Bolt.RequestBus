@@ -11,9 +11,13 @@ namespace Bolt.RequestBus
     public interface IRequestBus
     {
         Task<IResponse> SendAsync<TRequest>(TRequest request);
+        Task<IResponse> SendAsync<TRequest>(IExecutionContextReader context, TRequest request);
         Task<IResponse> TrySendAsync<TRequest>(TRequest request);
+        Task<IResponse> TrySendAsync<TRequest>(IExecutionContextReader context, TRequest request);
         Task<IResponse<TResult>> SendAsync<TRequest,TResult>(TRequest request);
+        Task<IResponse<TResult>> SendAsync<TRequest, TResult>(IExecutionContextReader context, TRequest request);
         Task<IResponse<TResult>> TrySendAsync<TRequest, TResult>(TRequest request);
+        Task<IResponse<TResult>> TrySendAsync<TRequest, TResult>(IExecutionContextReader context, TRequest request);
         Task PublishAsync<TEvent>(TEvent evnt);
         Task TryPublishAsync<TEvent>(TEvent evnt);
         Task PublishAsync<TEvent>(IExecutionContextReader context, TEvent evnt);
@@ -68,28 +72,48 @@ namespace Bolt.RequestBus
         {
             var context = await _serviceProvider.BuildContextAsync();
 
-            return await RequestHandlerBus.SendAsync(_serviceProvider, context, _logger, request, failSafe: false);
+            return await SendAsync(context, request);
+        }
+        
+        public Task<IResponse> SendAsync<TRequest>(IExecutionContextReader context, TRequest request)
+        {
+            return RequestHandlerBus.SendAsync(_serviceProvider, context, _logger, request, failSafe: false);
         }
 
         public async Task<IResponse<TResult>> SendAsync<TRequest, TResult>(TRequest request)
         {
             var context = await _serviceProvider.BuildContextAsync();
 
-            return await RequestHandlerBus.SendAsync<TRequest,TResult>(_serviceProvider, context, _logger, request, failSafe: false);
+            return await SendAsync<TRequest,TResult>(context, request);
+        }
+        
+        public Task<IResponse<TResult>> SendAsync<TRequest, TResult>(IExecutionContextReader context, TRequest request)
+        {
+            return RequestHandlerBus.SendAsync<TRequest, TResult>(_serviceProvider, context, _logger, request, failSafe: false);
         }
 
         public async Task<IResponse> TrySendAsync<TRequest>(TRequest request)
         {
             var context = await _serviceProvider.BuildContextAsync();
 
-            return await RequestHandlerBus.SendAsync(_serviceProvider, context, _logger, request, failSafe: true);
+            return await TrySendAsync(context, request);
+        }
+
+        public Task<IResponse> TrySendAsync<TRequest>(IExecutionContextReader context, TRequest request)
+        {
+            return RequestHandlerBus.SendAsync(_serviceProvider, context, _logger, request, failSafe: true);
         }
 
         public async Task<IResponse<TResult>> TrySendAsync<TRequest, TResult>(TRequest request)
         {
             var context = await _serviceProvider.BuildContextAsync();
 
-            return await RequestHandlerBus.SendAsync<TRequest, TResult>(_serviceProvider, context, _logger, request, failSafe: true);
+            return await TrySendAsync<TRequest, TResult>(context, request);
+        }
+
+        public Task<IResponse<TResult>> TrySendAsync<TRequest, TResult>(IExecutionContextReader context, TRequest request)
+        {
+            return RequestHandlerBus.SendAsync<TRequest, TResult>(_serviceProvider, context, _logger, request, failSafe: true);
         }
     }
 

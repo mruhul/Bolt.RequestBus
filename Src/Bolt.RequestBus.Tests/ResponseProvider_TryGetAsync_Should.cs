@@ -13,7 +13,7 @@ namespace Bolt.RequestBus.Tests
         public async Task Not_Throw_Exception_When_No_Handler_Available()
         {
             var sp = ServiceProviderBuilder.Build(c => {
-                c.AddTransient<IExecutionContextInitializerAsync, CustomerNoneExecutionContext>();
+                c.AddTransient<IExecutionContextPopulatorAsync, CustomerNoneExecutionContext>();
                 c.AddTransient<IResponseFilterAsync<Customer>, CustomerFilter>();
                 c.AddTransient<IResponseHandlerAsync<Customer>, GetCustomerHandler>();
                 c.AddTransient<IResponseHandlerAsync<Customer>, GetCustomer2Handler>();

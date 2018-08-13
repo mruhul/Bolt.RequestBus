@@ -13,7 +13,7 @@ namespace Bolt.RequestBus.Tests
         public async Task Return_Correct_Response()
         {
             var sp = ServiceProviderBuilder.Build(c => {
-                c.AddTransient<IExecutionContextInitializerAsync, Customer1ExecutionContext>();
+                c.AddTransient<IExecutionContextPopulatorAsync, Customer1ExecutionContext>();
                 c.AddTransient<IResponseFilterAsync<Customer>, CustomerFilter>();
                 c.AddTransient<IResponseHandlerAsync<Customer>, GetCustomerHandler>();
                 c.AddTransient<IResponseHandlerAsync<Customer>, GetCustomer2Handler>();
@@ -28,7 +28,7 @@ namespace Bolt.RequestBus.Tests
         public async Task Pick_Correct_Handler()
         {
             var sp = ServiceProviderBuilder.Build(c => {
-                c.AddTransient<IExecutionContextInitializerAsync, Customer2ExecutionContext>();
+                c.AddTransient<IExecutionContextPopulatorAsync, Customer2ExecutionContext>();
                 c.AddTransient<IResponseFilterAsync<Customer>, CustomerFilter>();
                 c.AddTransient<IResponseHandlerAsync<Customer>, GetCustomerHandler>();
                 c.AddTransient<IResponseHandlerAsync<Customer>, GetCustomer2Handler>();
@@ -43,7 +43,7 @@ namespace Bolt.RequestBus.Tests
         public async Task Throw_Exception_When_No_Applicable_Handler_Available()
         {
             var sp = ServiceProviderBuilder.Build(c => {
-                c.AddTransient<IExecutionContextInitializerAsync, CustomerNoneExecutionContext>();
+                c.AddTransient<IExecutionContextPopulatorAsync, CustomerNoneExecutionContext>();
                 c.AddTransient<IResponseFilterAsync<Customer>, CustomerFilter>();
                 c.AddTransient<IResponseHandlerAsync<Customer>, GetCustomerHandler>();
                 c.AddTransient<IResponseHandlerAsync<Customer>, GetCustomer2Handler>();
@@ -58,7 +58,7 @@ namespace Bolt.RequestBus.Tests
     {
         public string Name { get; set; }
     }
-    public class CustomerNoneExecutionContext : IExecutionContextInitializerAsync
+    public class CustomerNoneExecutionContext : IExecutionContextPopulatorAsync
     {
         public Task Init(IExecutionContextWriter writer)
         {
@@ -67,7 +67,7 @@ namespace Bolt.RequestBus.Tests
         }
     }
 
-    public class Customer1ExecutionContext : IExecutionContextInitializerAsync
+    public class Customer1ExecutionContext : IExecutionContextPopulatorAsync
     {
         public Task Init(IExecutionContextWriter writer)
         {
@@ -75,7 +75,7 @@ namespace Bolt.RequestBus.Tests
             return Task.CompletedTask;
         }
     }
-    public class Customer2ExecutionContext : IExecutionContextInitializerAsync
+    public class Customer2ExecutionContext : IExecutionContextPopulatorAsync
     {
         public Task Init(IExecutionContextWriter writer)
         {

@@ -22,12 +22,12 @@ namespace Bolt.RequestBus
     {
     }
 
-    public interface IExecutionContextInitializerAsync
+    public interface IExecutionContextPopulatorAsync
     {
         Task Init(IExecutionContextWriter writer);
     }
 
-    public interface IExecutionContextInitializerAsync<TRequest>
+    public interface IExecutionContextPopulatorAsync<TRequest>
     {
         Task Init(IExecutionContextWriter writer, TRequest request);
         bool IsApplicable(IExecutionContextReader context, TRequest request);
@@ -63,7 +63,7 @@ namespace Bolt.RequestBus
         
         internal static async Task<IExecutionContextReader> BuildContextAsync(this IServiceProvider serviceProvider)
         {
-            var providers = serviceProvider.GetServices<IExecutionContextInitializerAsync>();
+            var providers = serviceProvider.GetServices<IExecutionContextPopulatorAsync>();
 
             var context = new ExecutionContext();
 

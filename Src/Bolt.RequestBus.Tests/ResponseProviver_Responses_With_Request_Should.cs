@@ -15,7 +15,7 @@ namespace Bolt.RequestBus.Tests
         private Task<IEnumerable<IResponseUnit<TestResponse>>> ExecuteResponses(string contextValue, TestRequest request)
         {
             var sp = ServiceProviderBuilder.Build(sc => {
-                sc.AddTransient<IExecutionContextInitializerAsync>(c => new TestRequestExecutionContext(contextValue));
+                sc.AddTransient<IExecutionContextPopulatorAsync>(c => new TestRequestExecutionContext(contextValue));
                 sc.AddTransient<IValidatorAsync<TestRequest>, TestRequestValidator>();
                 sc.AddTransient<IResponseHandlerAsync<TestRequest, TestResponse>, TestRequestMainHandler>();
                 sc.AddTransient<IResponseHandlerAsync<TestRequest, TestResponse>, TestRequestFailedMainHandler>();
@@ -171,7 +171,7 @@ namespace Bolt.RequestBus.Tests
             }
         }
 
-        public class TestRequestExecutionContext : IExecutionContextInitializerAsync
+        public class TestRequestExecutionContext : IExecutionContextPopulatorAsync
         {
             private readonly string _value;
 

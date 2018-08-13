@@ -44,7 +44,7 @@ namespace Bolt.RequestBus.Tests
         public async Task Return_Failed_Response_With_Errors_When_Input_Is_Wrong()
         {
             var sp = ServiceProviderBuilder.Build(sc => {
-                sc.AddTransient<IExecutionContextInitializerAsync, ExecutionContextSecond>();
+                sc.AddTransient<IExecutionContextPopulatorAsync, ExecutionContextSecond>();
                 sc.AddTransient<IValidatorAsync<TestQuery>, TestQueryInputValidatorFirst>();
                 sc.AddTransient<IValidatorAsync<TestQuery>, TestQueryInputValidatorSecond>();
             });
@@ -63,7 +63,7 @@ namespace Bolt.RequestBus.Tests
         public async Task Return_Correct_Response()
         {
             var sp = ServiceProviderBuilder.Build(sc => {
-                sc.AddTransient<IExecutionContextInitializerAsync, ExecutionContextSecond>();
+                sc.AddTransient<IExecutionContextPopulatorAsync, ExecutionContextSecond>();
                 sc.AddTransient<IValidatorAsync<TestQuery>, TestQueryInputValidatorFirst>();
                 sc.AddTransient<IValidatorAsync<TestQuery>, TestQueryInputValidatorSecond>();
                 sc.AddTransient<IRequestHandlerAsync<TestQuery, TestResult>, TestQueryHandlerFirst>();
@@ -161,7 +161,7 @@ namespace Bolt.RequestBus.Tests
             }
         }
 
-        public class ExecutionContextFirst : IExecutionContextInitializerAsync
+        public class ExecutionContextFirst : IExecutionContextPopulatorAsync
         {
             public Task Init(IExecutionContextWriter writer)
             {
@@ -169,7 +169,7 @@ namespace Bolt.RequestBus.Tests
                 return Task.CompletedTask;
             }
         }
-        public class ExecutionContextSecond : IExecutionContextInitializerAsync
+        public class ExecutionContextSecond : IExecutionContextPopulatorAsync
         {
             public Task Init(IExecutionContextWriter writer)
             {

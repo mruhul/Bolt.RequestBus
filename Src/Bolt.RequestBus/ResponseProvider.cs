@@ -8,7 +8,9 @@ namespace Bolt.RequestBus
     public interface IResponseProvider
     {
         Task<TResult> ResponseAsync<TResult>();
+        Task<TResult> ResponseAsync<TResult>(IExecutionContextReader context);
         Task<TResult> TryResponseAsync<TResult>();
+        Task<TResult> TryResponseAsync<TResult>(IExecutionContextReader context);
         Task<IEnumerable<IResponseUnit<TResult>>> ResponsesAsync<TResult>();
         Task<IEnumerable<IResponseUnit<TResult>>> ResponsesAsync<TRequest, TResult>(TRequest request);
     }
@@ -41,14 +43,24 @@ namespace Bolt.RequestBus
         {
             var context = await _serviceProvider.BuildContextAsync();
 
-            return await ResponseProviderBus.GetAsync<TResult>(_serviceProvider, context, _logger, failSafe: false);
+            return await ResponseAsync<TResult>(context);
+        }
+
+        public Task<TResult> ResponseAsync<TResult>(IExecutionContextReader context)
+        {
+            return ResponseProviderBus.GetAsync<TResult>(_serviceProvider, context, _logger, failSafe: false);
         }
 
         public async Task<TResult> TryResponseAsync<TResult>()
         {
             var context = await _serviceProvider.BuildContextAsync();
 
-            return await ResponseProviderBus.GetAsync<TResult>(_serviceProvider, context, _logger, failSafe: true);
+            return await TryResponseAsync<TResult>(context);
+        }
+
+        public Task<TResult> TryResponseAsync<TResult>(IExecutionContextReader context)
+        {
+            return ResponseProviderBus.GetAsync<TResult>(_serviceProvider, context, _logger, failSafe: true);
         }
     }
 }
