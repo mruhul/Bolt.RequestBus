@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Bolt.RequestBus
 {
-    public static class ResponseProviderBus
+    internal static class ResponseProviderBus
     {
         public static async Task<TResult> GetAsync<TResult>(IServiceProvider sp, IExecutionContextReader context, ILogger logger, bool failSafe)
         {

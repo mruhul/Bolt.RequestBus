@@ -1,8 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Concurrent;
 using System.Threading.Tasks;
 
 namespace Bolt.RequestBus
@@ -27,13 +23,7 @@ namespace Bolt.RequestBus
         Task Init(IExecutionContextWriter writer);
     }
 
-    public interface IExecutionContextPopulatorAsync<TRequest>
-    {
-        Task Init(IExecutionContextWriter writer, TRequest request);
-        bool IsApplicable(IExecutionContextReader context, TRequest request);
-    }
-
-    public class ExecutionContext : IExecutionContextReader, IExecutionContextWriter
+    internal class ExecutionContext : IExecutionContextReader, IExecutionContextWriter
     {
         private readonly ConcurrentDictionary<string, object> _store = new ConcurrentDictionary<string, object>();
 
@@ -50,14 +40,6 @@ namespace Bolt.RequestBus
         public void Write(string key, object value)
         {
             _store.AddOrUpdate(key, value, (k, v) => value);
-        }
-    }
-
-    public static class ExecutionContextExtensions
-    {
-        public static T Get<T>(this IExecutionContextReader source, string key)
-        {
-            return (T)(source.Get(key));
         }
     }
 }

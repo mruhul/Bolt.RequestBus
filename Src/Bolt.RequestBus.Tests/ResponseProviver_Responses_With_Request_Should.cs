@@ -22,8 +22,7 @@ namespace Bolt.RequestBus.Tests
                 sc.AddTransient<IResponseHandlerAsync<TestRequest, TestResponse>, TestRequestInDependentHandler>();
                 sc.AddTransient<IResponseHandlerAsync<TestRequest, TestResponse>, TestRequestDependentHandler>();
             });
-
-
+            
             var sut = sp.GetService<IRequestBus>();
 
             return sut.ResponsesAsync<TestRequest, TestResponse>(request);

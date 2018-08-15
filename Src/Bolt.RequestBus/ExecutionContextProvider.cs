@@ -12,7 +12,7 @@ namespace Bolt.RequestBus
         Task<IExecutionContextReader> GetAsync(IServiceProvider serviceProvider);
     }
 
-    public class ExecutionContextProvider : IExecutionContextProvider
+    internal class ExecutionContextProvider : IExecutionContextProvider
     {      
         private IExecutionContextReader _context;
 
