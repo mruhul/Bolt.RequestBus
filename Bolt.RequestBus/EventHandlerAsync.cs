@@ -54,7 +54,7 @@ namespace Bolt.RequestBus
                     }
                     catch (Exception e)
                     {
-                        logger.LogError(e, e.Message);
+                        logger.LogError(0, e, e.Message);
                     }
                 }
             });

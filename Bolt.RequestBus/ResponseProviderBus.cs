@@ -205,7 +205,7 @@ namespace Bolt.RequestBus
                 catch (Exception e)
                 {
                     rsp = Response.Failed<TResult>();
-                    logger.LogError(e, e.Message);
+                    logger.LogError(0, e, e.Message);
                 }
             }
 
@@ -237,7 +237,7 @@ namespace Bolt.RequestBus
                 {
                     rsp = Response.Failed<TResult>();
 
-                    logger.LogError(e, $"ResponseHandler {h.GetType().FullName} failed with message {e.Message}");
+                    logger.LogError(0, e, $"ResponseHandler {h.GetType().FullName} failed with message {e.Message}");
                 }
             }
 #if DEBUG
