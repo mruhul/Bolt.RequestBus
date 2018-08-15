@@ -183,3 +183,4 @@ $RECYCLE.BIN/
 _CreateNewNuGetPackage/Config.ps1
 v15
 .vs
+nupkgs

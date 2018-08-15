@@ -3,7 +3,7 @@ mkdir nupkgs
 cd nupkgs
 del /F /Q *.*
 cd ..
-cd "Bolt.Common.Extensions"
+cd "Bolt.RequestBus"
 dotnet restore
 dotnet build -c Release
 dotnet pack -c Release --no-build --output ../nupkgs
