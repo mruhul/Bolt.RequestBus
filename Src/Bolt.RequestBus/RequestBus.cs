@@ -17,6 +17,12 @@ namespace Bolt.RequestBus
         Task<IResponse<TResult>> TrySendAsync<TRequest, TResult>(TRequest request);
         Task PublishAsync<TEvent>(TEvent evnt);
         Task TryPublishAsync<TEvent>(TEvent evnt);
+
+
+        Task<TResult> ResponseAsync<TResult>();
+        Task<TResult> TryResponseAsync<TResult>();
+        Task<IEnumerable<IResponseUnit<TResult>>> ResponsesAsync<TResult>();
+        Task<IEnumerable<IResponseUnit<TResult>>> ResponsesAsync<TRequest, TResult>(TRequest request);
     }
 
     public class RequestBusSettings
@@ -77,6 +83,35 @@ namespace Bolt.RequestBus
             var context = await _contextProvider.GetAsync(_serviceProvider);
 
             return await RequestHandlerBus.SendAsync<TRequest, TResult>(_serviceProvider, context, _logger, request, failSafe: true);
+        }
+
+
+
+        public async Task<IEnumerable<IResponseUnit<TResult>>> ResponsesAsync<TResult>()
+        {
+            var context = await _contextProvider.GetAsync(_serviceProvider);
+            return await ResponseProviderBus.GetAllAsync<TResult>(_serviceProvider, context, _logger);
+        }
+
+        public async Task<IEnumerable<IResponseUnit<TResult>>> ResponsesAsync<TRequest, TResult>(TRequest request)
+        {
+            var context = await _contextProvider.GetAsync(_serviceProvider);
+
+            return await ResponseProviderBus.GetAllAsync<TRequest, TResult>(_serviceProvider, context, _logger, request);
+        }
+
+        public async Task<TResult> ResponseAsync<TResult>()
+        {
+            var context = await _contextProvider.GetAsync(_serviceProvider);
+
+            return await ResponseProviderBus.GetAsync<TResult>(_serviceProvider, context, _logger, failSafe: false);
+        }
+
+        public async Task<TResult> TryResponseAsync<TResult>()
+        {
+            var context = await _contextProvider.GetAsync(_serviceProvider);
+
+            return await ResponseProviderBus.GetAsync<TResult>(_serviceProvider, context, _logger, failSafe: true);
         }
     }
 

@@ -19,7 +19,7 @@ namespace Bolt.RequestBus.Tests
                 c.AddTransient<IResponseHandlerAsync<Customer>, GetCustomer2Handler>();
             });
 
-            var response = sp.GetService<IResponseProvider>();
+            var response = sp.GetService<IRequestBus>();
             var result = await response.ResponseAsync<Customer>();
             result.Name.ShouldBe("Customer1Filtered");
         }
@@ -34,7 +34,7 @@ namespace Bolt.RequestBus.Tests
                 c.AddTransient<IResponseHandlerAsync<Customer>, GetCustomer2Handler>();
             });
 
-            var response = sp.GetService<IResponseProvider>();
+            var response = sp.GetService<IRequestBus>();
             var result = await response.ResponseAsync<Customer>();
             result.Name.ShouldBe("Customer2Filtered");
         }
@@ -49,7 +49,7 @@ namespace Bolt.RequestBus.Tests
                 c.AddTransient<IResponseHandlerAsync<Customer>, GetCustomer2Handler>();
             });
 
-            var response = sp.GetService<IResponseProvider>();
+            var response = sp.GetService<IRequestBus>();
             await Should.ThrowAsync<RequestBusException>(response.ResponseAsync<Customer>());
         }
     }

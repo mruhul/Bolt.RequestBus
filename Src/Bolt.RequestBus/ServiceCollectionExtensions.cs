@@ -9,7 +9,6 @@ namespace Bolt.RequestBus
         {
             source.TryAdd(ServiceDescriptor.Transient<IRequestBus, RequestBus>());
             source.TryAdd(ServiceDescriptor.Scoped<IExecutionContextProvider, ExecutionContextProvider>());
-            source.TryAdd(ServiceDescriptor.Transient<IResponseProvider, ResponseProvider>());
         }
     }
 }

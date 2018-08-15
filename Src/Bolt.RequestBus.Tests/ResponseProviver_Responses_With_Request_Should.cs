@@ -24,7 +24,7 @@ namespace Bolt.RequestBus.Tests
             });
 
 
-            var sut = sp.GetService<IResponseProvider>();
+            var sut = sp.GetService<IRequestBus>();
 
             return sut.ResponsesAsync<TestRequest, TestResponse>(request);
         }
