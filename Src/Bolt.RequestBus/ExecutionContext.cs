@@ -59,20 +59,5 @@ namespace Bolt.RequestBus
         {
             return (T)(source.Get(key));
         }
-
-        
-        internal static async Task<IExecutionContextReader> BuildContextAsync(this IServiceProvider serviceProvider)
-        {
-            var providers = serviceProvider.GetServices<IExecutionContextPopulatorAsync>();
-
-            var context = new ExecutionContext();
-
-            if(providers != null)
-            {
-                await Task.WhenAll(providers.Select(p => p.Init(context)));
-            }
-
-            return context;
-        }
     }
 }

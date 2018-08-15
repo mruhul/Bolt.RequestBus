@@ -18,30 +18,32 @@ namespace Bolt.RequestBus
     public class ResponseProvider : IResponseProvider
     {
         private readonly IServiceProvider _serviceProvider;
+        private readonly IExecutionContextProvider _contextProvider;
         private readonly ILogger<ResponseProvider> _logger;
 
-        public ResponseProvider(IServiceProvider serviceProvider, ILogger<ResponseProvider> logger)
+        public ResponseProvider(IServiceProvider serviceProvider, IExecutionContextProvider contextProvider, ILogger<ResponseProvider> logger)
         {
             _serviceProvider = serviceProvider;
+            _contextProvider = contextProvider;
             _logger = logger;
         }
 
         public async Task<IEnumerable<IResponseUnit<TResult>>> ResponsesAsync<TResult>()
         {
-            var context = await _serviceProvider.BuildContextAsync();
+            var context = await _contextProvider.GetAsync(_serviceProvider);
             return await ResponseProviderBus.GetAllAsync<TResult>(_serviceProvider, context, _logger);
         }
 
         public async Task<IEnumerable<IResponseUnit<TResult>>> ResponsesAsync<TRequest, TResult>(TRequest request)
         {
-            var context = await _serviceProvider.BuildContextAsync();
+            var context = await _contextProvider.GetAsync(_serviceProvider);
 
             return await ResponseProviderBus.GetAllAsync<TRequest, TResult>(_serviceProvider, context, _logger, request);
         }
 
         public async Task<TResult> ResponseAsync<TResult>()
         {
-            var context = await _serviceProvider.BuildContextAsync();
+            var context = await _contextProvider.GetAsync(_serviceProvider);
 
             return await ResponseAsync<TResult>(context);
         }
@@ -53,7 +55,7 @@ namespace Bolt.RequestBus
 
         public async Task<TResult> TryResponseAsync<TResult>()
         {
-            var context = await _serviceProvider.BuildContextAsync();
+            var context = await _contextProvider.GetAsync(_serviceProvider);
 
             return await TryResponseAsync<TResult>(context);
         }
