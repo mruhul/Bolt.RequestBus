@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -32,25 +31,13 @@ namespace Bolt.RequestBus
 
                 if (!failSafe)
                 {
-#if DEBUG
-                    var timer = Timer.Start(logger, h);
-#endif 
                     await h.Handle(context, evnt);
-#if DEBUG
-                    timer.Completed();
-#endif
                 }
                 else
                 {
                     try
                     {
-#if DEBUG
-                        var timer = Timer.Start(logger, h);
-#endif 
                         await h.Handle(context, evnt);
-#if DEBUG
-                        timer.Completed();
-#endif
                     }
                     catch (Exception e)
                     {

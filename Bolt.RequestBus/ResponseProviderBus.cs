@@ -26,14 +26,8 @@ namespace Bolt.RequestBus
                 throw new RequestBusException($"No response handler defined for type {typeof(IResponseHandlerAsync<TResult>)}");
             }
 
-#if DEBUG
-            var timer = Timer.Start(logger, handler);
-#endif
             var response = await handler.Handle(context);
 
-#if DEBUG
-            timer.Completed();
-#endif
             if (response == null)
             {
                 return default(TResult);
@@ -110,13 +104,7 @@ namespace Bolt.RequestBus
 
             foreach (var filter in filters)
             {
-#if DEBUG
-                var timer = Timer.Start(logger, filter);
-#endif
                 await filter.Filter(context, request, result);
-#if DEBUG
-                timer.Completed();
-#endif
             }
 
             return result;
@@ -174,13 +162,7 @@ namespace Bolt.RequestBus
 
             foreach (var filter in filters)
             {
-#if DEBUG
-                var timer = Timer.Start(logger, filter);
-#endif
                 await filter.Filter(context, result);
-#if DEBUG
-                timer.Completed();
-#endif
             }
 
             return result;
@@ -189,9 +171,7 @@ namespace Bolt.RequestBus
         private static async Task<IResponseUnit<TResult>> HandleResponseHandler<TResult>(IResponseHandlerAsync<TResult> h, IExecutionContextReader context, ILogger logger)
         {
             IResponse<TResult> rsp;
-#if DEBUG
-            var timer = Timer.Start(logger, h);
-#endif
+
             if (h.ExecutionHint == ExecutionHintType.Main)
             {
                 rsp = await h.Handle(context);
@@ -209,19 +189,11 @@ namespace Bolt.RequestBus
                 }
             }
 
-#if DEBUG
-            timer.Completed();
-#endif
-
             return Convert(rsp, h.ExecutionHint);
         }
 
         private static async Task<IResponseUnit<TResult>> HandleResponseHandler<TRequest, TResult>(IExecutionContextReader context, IResponseHandlerAsync<TRequest, TResult> h, TRequest request, ILogger logger)
         {
-
-#if DEBUG
-            var timer = Timer.Start(logger, h);
-#endif
             IResponse<TResult> rsp;
             if (h.ExecutionHint != ExecutionHintType.Main)
             {
@@ -240,9 +212,7 @@ namespace Bolt.RequestBus
                     logger.LogError(0, e, $"ResponseHandler {h.GetType().FullName} failed with message {e.Message}");
                 }
             }
-#if DEBUG
-            timer.Completed();
-#endif
+
             return Convert(rsp, h.ExecutionHint);
         }
 

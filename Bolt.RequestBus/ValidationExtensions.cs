@@ -18,13 +18,9 @@ namespace Bolt.RequestBus
             foreach (var val in validators)
             {
                 IEnumerable<IError> errors;
-#if DEBUG
-                var timer = Timer.Start(logger, val);
-#endif
+
                 errors = await val.Validate(context, request);
-#if DEBUG
-                timer.Completed();
-#endif
+
                 if (errors != null && errors.Any())
                 {
                     return errors;

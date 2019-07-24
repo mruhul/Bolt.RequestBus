@@ -12,9 +12,10 @@ namespace Bolt.RequestBus
     {
         public virtual ExecutionHintType ExecutionHint => ExecutionHintType.Independent;
 
-        Task<IResponse<TResult>> IResponseHandlerAsync<TResult>.Handle(IExecutionContextReader context)
+        async Task<IResponse<TResult>> IResponseHandlerAsync<TResult>.Handle(IExecutionContextReader context)
         {
-            return Handle(context).ContinueWith(h => Response.Succeed(h.Result));
+            var result = await Handle(context);
+            return Response.Succeed(result);
         }
 
         protected abstract Task<TResult> Handle(IExecutionContextReader context);
@@ -26,9 +27,10 @@ namespace Bolt.RequestBus
     {
         public ExecutionHintType ExecutionHint => ExecutionHintType.Main;
 
-        Task<IResponse<TResult>> IResponseHandlerAsync<TResult>.Handle(IExecutionContextReader context)
+        async Task<IResponse<TResult>> IResponseHandlerAsync<TResult>.Handle(IExecutionContextReader context)
         {
-            return Handle(context).ContinueWith(h => Response.Succeed(h.Result));
+            var result = await Handle(context);
+            return Response.Succeed(result);
         }
 
         protected abstract Task<TResult> Handle(IExecutionContextReader context);
@@ -46,10 +48,10 @@ namespace Bolt.RequestBus
     {
         public virtual ExecutionHintType ExecutionHint => ExecutionHintType.Independent;
 
-        Task<IResponse<TResult>> IResponseHandlerAsync<TRequest, TResult>.Handle(IExecutionContextReader context, TRequest request)
+        async Task<IResponse<TResult>> IResponseHandlerAsync<TRequest, TResult>.Handle(IExecutionContextReader context, TRequest request)
         {
-            return this.Handle(context, request)
-                    .ContinueWith(t => Response.Succeed(t.Result));
+            var result = await this.Handle(context, request);
+            return Response.Succeed(result);
         }
 
         protected abstract Task<TResult> Handle(IExecutionContextReader context, TRequest request);
@@ -61,10 +63,10 @@ namespace Bolt.RequestBus
     {
         public ExecutionHintType ExecutionHint => ExecutionHintType.Main;
 
-        Task<IResponse<TResult>> IResponseHandlerAsync<TRequest, TResult>.Handle(IExecutionContextReader context, TRequest request)
+        async Task<IResponse<TResult>> IResponseHandlerAsync<TRequest, TResult>.Handle(IExecutionContextReader context, TRequest request)
         {
-            return this.Handle(context, request)
-                    .ContinueWith(t => Response.Succeed(t.Result));
+            var result = await this.Handle(context, request);
+            return Response.Succeed(result);
         }
 
         protected abstract Task<TResult> Handle(IExecutionContextReader context, TRequest request);

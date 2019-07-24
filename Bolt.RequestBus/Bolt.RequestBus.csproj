@@ -2,7 +2,7 @@
 
   <PropertyGroup> 
     <Description>A CQRS lib</Description>
-    <Version>2.0.1</Version>
+    <Version>2.0.2</Version>
     <Authors>Mohammad Ruhul Amin</Authors>
     <AssemblyName>Bolt.RequestBus</AssemblyName>
     <PackageId>Bolt.RequestBus</PackageId>

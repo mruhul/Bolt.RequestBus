@@ -20,13 +20,7 @@ namespace Bolt.RequestBus
 
             foreach(var filter in filters)
             {
-#if DEBUG
-                var timer = Timer.Start(logger, filter);
-#endif
                 await filter.Filter(context, response);
-#if DEBUG
-                timer.Completed();
-#endif
             }
         }
 
@@ -41,14 +35,7 @@ namespace Bolt.RequestBus
 
             foreach (var filter in filters)
             {
-#if DEBUG
-                var timer = Timer.Start(logger, filter);
-#endif
                 await filter.Filter(context, request, response);
-
-#if DEBUG
-                timer.Completed();
-#endif  
             }
         }
     }

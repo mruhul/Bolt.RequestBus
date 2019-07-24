@@ -1,8 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -43,18 +41,18 @@ namespace Bolt.RequestBus
             _logger = logger;
         }
 
-        public Task PublishAsync<TEvent>(TEvent evnt)
+        public async Task PublishAsync<TEvent>(TEvent evnt)
         {
-            return _contextProvider.GetAsync(_serviceProvider)
-                    .ContinueWith(x => EventHandlerBus
-                                        .PublishAsync(_serviceProvider, x.Result, _logger, evnt, false));
+            var context = await _contextProvider.GetAsync(_serviceProvider);
+
+            await EventHandlerBus.PublishAsync(_serviceProvider, context, _logger, evnt, false);
         }
 
-        public Task TryPublishAsync<TEvent>(TEvent evnt)
+        public async Task TryPublishAsync<TEvent>(TEvent evnt)
         {
-            return _contextProvider.GetAsync(_serviceProvider)
-                    .ContinueWith(x => EventHandlerBus
-                                        .PublishAsync(_serviceProvider, x.Result, _logger, evnt, failSafe: true));
+            var context = await _contextProvider.GetAsync(_serviceProvider);
+
+            await EventHandlerBus.PublishAsync(_serviceProvider, context, _logger, evnt, failSafe: true);
         }
         
         public async Task<IResponse> SendAsync<TRequest>(TRequest request)

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,10 +13,10 @@ namespace Bolt.RequestBus
 
     public abstract class RequestHandlerAsync<TRequest> : IRequestHandlerAsync<TRequest>
     {
-        Task<IResponse> IRequestHandlerAsync<TRequest>.Handle(IExecutionContextReader context, TRequest request)
+        async Task<IResponse> IRequestHandlerAsync<TRequest>.Handle(IExecutionContextReader context, TRequest request)
         {
-            return Handle(context, request)
-                .ContinueWith(t => Response.Succeed());
+            await Handle(context, request);
+            return Response.Succeed();
         }
 
         protected abstract Task Handle(IExecutionContextReader context, TRequest request);
@@ -36,10 +35,11 @@ namespace Bolt.RequestBus
 
         public virtual bool IsApplicable(IExecutionContextReader context, TRequest request) => true;
 
-        Task<IResponse<TResult>> IRequestHandlerAsync<TRequest, TResult>.Handle(IExecutionContextReader context, TRequest request)
+        async Task<IResponse<TResult>> IRequestHandlerAsync<TRequest, TResult>.Handle(IExecutionContextReader context, TRequest request)
         {
-            return Handle(context, request)
-                .ContinueWith(t => Response.Succeed(t.Result));
+            var result = await Handle(context, request);
+
+            return Response.Succeed(result);
         }
     }
 
@@ -65,13 +65,8 @@ namespace Bolt.RequestBus
                 throw new RequestBusException($"No request handler found that implement IRequestHandlerAsync<{typeof(TRequest).FullName}>");
             }
 
-#if DEBUG
-            var timer = Timer.Start(logger, handler);
-#endif
             var result = await handler.Handle(context, request);
-#if DEBUG
-            timer.Completed();
-#endif
+
             return result;
         }
 
@@ -94,13 +89,7 @@ namespace Bolt.RequestBus
                 throw new RequestBusException($"No request handler found that implement IRequestHandlerAsync<{typeof(TRequest).FullName},{typeof(TResult).FullName}>");
             }
 
-#if DEBUG
-            var timer = Timer.Start(logger, handler);
-#endif
             var result = await handler.Handle(context, request);
-#if DEBUG
-            timer.Completed();
-#endif
 
             await serviceProvider.FilterAsync(context, request, result, logger);
 
